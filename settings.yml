@@ -1,0 +1,26 @@
+# paste the bot token here from https://discord.com/developers/applications
+bot-token: 
+
+# prefix for old commands (not used in new slash commands)
+text-prefix: 
+
+about:
+
+  # define the beginning of the description of /about
+  description: >
+    Collect balls on discord, made for people without docker
+
+  # override this if you have a fork
+  github-link: https://github.com/wascertified/dockerless-dex
+
+  # valid invite for a Discord server
+  discord-invite: https://discord.gg/
+
+# used for names of collectibles (eg. You caught a new {collectibles-name})
+collectibles-name: 
+
+# the name of the bot (eg. dexcord) -- NO SPACES --
+bot-name: 
+
+# this is /dexs by default, but you can change it for /animals or /rocks for example -- NO SPACES, LOWERCASE --
+players-group-cog-name: 
