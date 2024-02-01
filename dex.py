@@ -1,7 +1,7 @@
 countryballs = {
 "ball name": "ball url",
 "ball name 2": "ball url 2"
-# add more if yoooooou want, this is just an test.
+# add more if yoooooou want, this is just an example.
 }
 
 import discord
@@ -67,8 +67,7 @@ async def on_ready():
     print(f"{time.ctime()} | Prefix: {prefix}")
     print(f"{time.ctime()} | Servers: {len(bot.guilds)}")
     print(f"{time.ctime()} | Commands loaded: {len(bot.commands)}")
-    await bot.change_presence(status=discord.Status.online, activity=discord.Game("FBI | /help"))
-
+    
     spawn_ball.start()
 
 @tree.command(name=f"{slash_command_name}_list", description=f"List your {collectibles_name}.")
