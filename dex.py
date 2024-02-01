@@ -145,7 +145,7 @@ async def reloadtree(ctx: commands.Context, guilds: commands.Greedy[discord.Obje
             synced = await ctx.bot.tree.sync()
 
         await ctx.send(
-            f"Synced {len(synced)} tree {'globally' if spec is None else 'to the current guild.'}"
+            f"Synced {len(synced)} tree commands {'globally' if spec is None else 'to the current guild.'}"
         )
         return
 
