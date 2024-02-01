@@ -12,7 +12,6 @@ discord.py
 pyyaml
 asyncio
 requests
-sqlite3
 
 # You can download them by typing
-pip install discord.py pyyaml asyncio requests sqlite3
+pip install discord.py pyyaml asyncio requests
