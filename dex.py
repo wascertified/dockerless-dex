@@ -1,5 +1,5 @@
 countryballs = {
-"ball name": "ball url"
+"ball name": "ball url",
 "ball name 2": "ball url 2"
 # add more if yoooooou want, this is just an test.
 }
