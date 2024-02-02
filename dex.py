@@ -245,4 +245,47 @@ async def spawn_ball():
         else:
             print(f"Channel with ID {channel_id} not found or bot doesn't have access.")
 
+@bot.command()
+@commands.is_owner()
+async def spawnball(ctx, *, ball_name: str = None):
+    channel = ctx.channel
+    if ball_name:
+        random_countryball_name = ball_name
+        random_countryball_url = countryballs.get(ball_name)
+        if not random_countryball_url:
+            await ctx.send(f"No countryball found with name: {ball_name}")
+            return
+    else:
+        countryball_choice = random.choice(list(countryballs.items()))
+        random_countryball_name, random_countryball_url = countryball_choice
+
+    embed = discord.Embed(
+        title=f"A wild {collectibles_name} appeared!"
+    )
+    embed.set_image(url=random_countryball_url)
+
+    view = discord.ui.View()
+    catch_button = discord.ui.Button(label="Catch me!", style=discord.ButtonStyle.primary)
+
+    async def catch_button_callback(interaction):
+        bot.loop.create_task(
+            interaction.response.send_modal(
+                CatchModal(random_countryball_name, random_countryball_url, catch_button)
+            )
+        )
+
+    catch_button.callback = catch_button_callback
+    view.add_item(catch_button)
+
+    try:
+        message = await channel.send(embed=embed, view=view)
+        caught_balls[message.id] = {
+            'url': random_countryball_url,
+            'name': random_countryball_name,
+            'timestamp': time.time(),
+            'channel_id': channel.id
+        }
+    except discord.HTTPException as e:
+        await ctx.send(f"Failed to send message: {e}")
+
 bot.run(token)
