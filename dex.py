@@ -127,6 +127,37 @@ async def completion(interaction: discord.Interaction, member: discord.Member = 
 
     await interaction.response.send_message(embed=embed)
 
+@tree.command(name=f'{slash_command_name}_config', description='Configure a spawn channel for the server.')
+@commands.has_permissions(administrator=True)
+async def config(interaction: discord.Interaction, channel: discord.TextChannel):
+    channel_id = channel.id
+    if interaction.guild_id in configured_channels:
+        await interaction.response.send_message("A spawn channel is already configured for this server. Use /disableconfig to remove it.")
+    else:
+        configured_channels[interaction.guild_id] = channel_id
+        with open('config.txt', 'a') as config_file:
+            config_file.write(f"{interaction.guild_id}:{channel_id}\n")
+        embed = discord.Embed(
+            title=f"{bot_name} Activation",
+            description=f"{bot_name} is now configured in {channel.mention}! To remove this spawn channel, use the `/{slash_command_name}_disableconfig` command.\n\n"
+                        "[Terms of Service](https://gist.github.com/laggron42/52ae099c55c6ee1320a260b0a3ecac4e)"
+        )
+        await interaction.response.send_message(embed=embed)
+
+@tree.command(name=f'{slash_command_name}_disableconfig', description='Disable the spawn channel for the server.')
+@commands.has_permissions(administrator=True)
+async def disableconfig(interaction: discord.Interaction):
+    guild_id_str = f":{interaction.guild_id}"
+    if interaction.guild_id in configured_channels:
+        del configured_channels[interaction.guild_id]
+        with open('config.txt', 'r') as config_file:
+            lines = [line for line in config_file if not line.strip().endswith(guild_id_str)]
+        with open('config.txt', 'w') as config_file:
+            config_file.writelines(lines)
+        await interaction.response.send_message(f"{bot_name} spawn channel configuration has been removed for this server.")
+    else:
+        await interaction.response.send_message("No spawn channel is currently configured for this server.")
+
 @bot.command()
 @commands.guild_only()
 @commands.is_owner()
