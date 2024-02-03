@@ -1,3 +1,5 @@
+  ## Support Server: https://discord.gg/RSdcTAn7FG
+
 # To make this, you need python. Get it from https://www.python.org/downloads/ or the microsoft store!
 
 # Installation
