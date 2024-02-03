@@ -136,11 +136,12 @@ async def config(interaction: discord.Interaction, channel: discord.TextChannel)
     else:
         configured_channels[interaction.guild_id] = channel_id
         with open('config.txt', 'a') as config_file:
-            config_file.write(f"{interaction.guild_id}:{channel_id}\n")
+            config_file.write(f"{channel_id}:{interaction.guild_id}\n")
         embed = discord.Embed(
             title=f"{bot_name} Activation",
             description=f"{bot_name} is now configured in {channel.mention}! To remove this spawn channel, use the `/{slash_command_name}_disableconfig` command.\n\n"
-                        "[Terms of Service](https://gist.github.com/laggron42/52ae099c55c6ee1320a260b0a3ecac4e)"
+                        "[Terms of Service](https://gist.github.com/laggron42/52ae099c55c6ee1320a260b0a3ecac4e)",
+            color=0x00FF00
         )
         await interaction.response.send_message(embed=embed)
 
