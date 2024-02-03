@@ -24,3 +24,6 @@ bot-name:
 
 # this is /dexs by default, but you can change it for /animals or /rocks for example -- NO SPACES, LOWERCASE --
 players-group-cog-name: 
+
+# the spawn time of the bot, for example hours=1 or minutes=1 or seconds=1
+spawn-time: hours=1
