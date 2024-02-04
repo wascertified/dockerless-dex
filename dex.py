@@ -19,6 +19,9 @@ prefix = settings["text-prefix"]
 collectibles_name = settings["collectibles-name"]
 slash_command_name = settings["players-group-cog-name"]
 bot_name = settings["bot-name"]
+about_description = settings["about"]["description"]
+github_link = settings["about"]["github-link"]
+discord_invite = settings["about"]["discord-invite"]
 
 bot = commands.Bot(command_prefix=prefix, intents=discord.Intents.all())
 bot.remove_command("help")
@@ -69,6 +72,30 @@ async def on_ready():
     print(f"{time.ctime()} | Commands loaded: {len(bot.commands)}")
     
     spawn_ball.start()
+
+@tree.command(name="about", description="Get information about this bot.")
+async def about(interaction: discord.Interaction):
+    total_balls = len(countryballs)
+    player_count = cursor.execute("SELECT COUNT(DISTINCT user_id) FROM caught_balls").fetchone()[0]
+    total_caught_balls = cursor.execute("SELECT COUNT(*) FROM caught_balls").fetchone()[0]
+
+    embed = discord.Embed(
+        title=f"{bot_name}",
+        description=f"""
+{about_description}
+Running version 1.1
+
+{total_balls} countryballs to collect
+{player_count} players that caught {total_caught_balls} {collectibles_name}
+{len(bot.guilds)} servers playing
+
+This bot was made/coded by wascertified. The github is https://github.com/wascertified
+
+Support Server: {discord_invite}
+        """,
+        color=discord.Color.blurple()
+    )
+    await interaction.response.send_message(embed=embed)
 
 @tree.command(name=f"{slash_command_name}_list", description=f"List your {collectibles_name}.")
 async def list_collectibles(interaction: discord.Interaction):
