@@ -226,7 +226,7 @@ class CatchModal(discord.ui.Modal):
 
     async def on_submit(self, interaction: discord.Interaction):
         if self.catch_button.disabled:
-            await interaction.response.send_message("This countryball has already been caught!", ephemeral=True)
+            await interaction.response.send_message("{interaction.user.mention} I've been caught already!", ephemeral=False)
             return
 
         if self.countryball_name_input.value.lower() == self.correct_name.lower():
@@ -236,7 +236,7 @@ class CatchModal(discord.ui.Modal):
             self.catch_button.label = "Caught!"
             await interaction.message.edit(view=self.catch_button.view)
         else:
-            await interaction.response.send_message(f"{interaction.user.mention} Wrong name!", ephemeral=True)
+            await interaction.response.send_message(f"{interaction.user.mention} Wrong name!", ephemeral=False)
 
 @tasks.loop(hours=2)
 async def spawn_ball():
