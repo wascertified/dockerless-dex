@@ -6,10 +6,9 @@ text-prefix:
 
 about:
 
-  # define the beginning of the description of /about
-  description: >
-    Collect balls on discord, made for people without docker
-
+  # the begginging of the /about
+  description: Collect balls on Discord. Made for people without docker / pc
+  
   # override this if you have a fork
   github-link: https://github.com/wascertified/dockerless-dex
 
