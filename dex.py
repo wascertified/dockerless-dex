@@ -7,7 +7,7 @@ countryballs = {
 import discord
 from discord.ext import commands, tasks
 from discord import app_commands
-import random, asyncio, yaml, os, requests, time, json
+import random, asyncio, yaml, os, time, json
 from typing import Literal, Optional
 import sqlite3
 
