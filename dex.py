@@ -1,7 +1,7 @@
 countryballs = {
 "ball name": "ball url",
 "ball name 2": "ball url 2"
-# add more if yoooooou want, this is just an example.
+# add more if you want, this is just an example.
 }
 
 import discord
@@ -70,8 +70,6 @@ async def on_ready():
     print(f"{time.ctime()} | Prefix: {prefix}")
     print(f"{time.ctime()} | Servers: {len(bot.guilds)}")
     print(f"{time.ctime()} | Commands loaded: {len(bot.commands)}")
-    
-    spawn_ball.start()
 
 @tree.command(name="about", description="Get information about this bot.")
 async def about(interaction: discord.Interaction):
@@ -83,7 +81,7 @@ async def about(interaction: discord.Interaction):
         title=f"{bot_name}",
         description=f"""
 {about_description}
-Running version 1.1
+Running version 1.2
 
 {total_balls} countryballs to collect
 {player_count} players that caught {total_caught_balls} {collectibles_name}
@@ -265,44 +263,57 @@ class CatchModal(discord.ui.Modal):
         else:
             await interaction.response.send_message(f"{interaction.user.mention} Wrong name!", ephemeral=False)
 
-@tasks.loop(hours=2)
-async def spawn_ball():
-    for server_id, channel_id in configured_channels.items():
-        channel = bot.get_channel(channel_id)
-        if channel:
-            countryball_choice = random.choice(list(countryballs.items()))
-            random_countryball_name, random_countryball_url = countryball_choice
+spawned_balls = {}
 
-            embed = discord.Embed(
-                title=f"A wild {collectibles_name} appeared!"
-            )
-            embed.set_image(url=random_countryball_url)
+@bot.event
+async def on_message(message):
+    if message.author.bot:
+        return
 
-            view = discord.ui.View()
-            catch_button = discord.ui.Button(label="Catch me!", style=discord.ButtonStyle.primary)
-            def catch_button_callback(interaction, name=random_countryball_name, url=random_countryball_url, button=catch_button):
-                bot.loop.create_task(
-                    interaction.response.send_modal(
-                        CatchModal(name, url, button)
-                    )
-                )
-            catch_button.callback = catch_button_callback
-            view.add_item(catch_button)
+    if message.channel.id in configured_channels.values():
+        await try_spawning_countryball(message)
 
-            try:
-                message = await channel.send(embed=embed, view=view)
-                caught_balls[message.id] = {
-                    'url': random_countryball_url,
-                    'name': random_countryball_name,
-                    'timestamp': time.time(),
-                    'channel_id': channel_id
-                }
-            except discord.HTTPException as e:
-                print(f"Failed to send message in channel {channel_id}: {e}")
+    await bot.process_commands(message)
 
-            await asyncio.sleep(10)
-        else:
-            print(f"Channel with ID {channel_id} not found or bot doesn't have access.")
+async def try_spawning_countryball(message):
+    last_spawn_info = spawned_balls.get(message.channel.id)
+    current_time = time.time()
+
+    # if the bot hasn't spawned anything in the last hour, spawn a new ball
+    if last_spawn_info is None or current_time - last_spawn_info.get('timestamp', 0) >= 3600:
+        await spawn_countryball(message.channel)
+
+async def spawn_countryball(channel):
+    countryball_choice = random.choice(list(countryballs.items()))
+    random_countryball_name, random_countryball_url = countryball_choice
+
+    embed = discord.Embed(
+        title=f"A wild {collectibles_name} appeared!"
+    )
+    embed.set_image(url=random_countryball_url)
+
+    view = discord.ui.View()
+    catch_button = discord.ui.Button(label="Catch me!", style=discord.ButtonStyle.primary)
+    
+    async def catch_button_callback(interaction):
+        await interaction.response.send_modal(
+            CatchModal(random_countryball_name, random_countryball_url, catch_button)
+        )
+    catch_button.callback = catch_button_callback
+    view.add_item(catch_button)
+
+    try:
+        message = await channel.send(embed=embed, view=view)
+        spawned_balls[channel.id] = {
+            'url': random_countryball_url,
+            'name': random_countryball_name,
+            'timestamp': time.time(),
+            'channel_id': channel.id
+        }
+    except discord.HTTPException as e:
+        print(f"Failed to send message: {e}")
+    except discord.InvalidArgument as e:
+        print(f"Invalid argument: {e}")
 
 @bot.command()
 @commands.is_owner()
