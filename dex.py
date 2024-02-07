@@ -131,6 +131,10 @@ async def completion(interaction: discord.Interaction, member: discord.Member = 
 
     all_balls_data = countryballs.items()
 
+    if not all_balls_data:
+        await interaction.response.send_message(f"No {collectibles_name} added yet.")
+        return
+
     with open('emojis.json', 'r') as emojis_file:
         ball_to_emoji = json.load(emojis_file).get("ball_to_emoji", {})
 
