@@ -1,6 +1,6 @@
 countryballs = {
-"ball name": "ball url",
-"ball name 2": "ball url 2"
+# "ball name": "ball url",
+# "ball name 2": "ball url 2"
 # add more if you want, this is just an example.
 }
 
