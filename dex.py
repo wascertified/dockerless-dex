@@ -59,6 +59,10 @@ def read_config_file():
             lines = file.readlines()
             for line in lines:
                 channel_id, server_id = line.strip().split(':')
+                if channel_id.strip() == "channel ID 1" and server_id.strip() == "server ID 1":
+                    continue
+                if channel_id.strip() == "channel ID 2" and server_id.strip() == "server ID 2":
+                    continue
                 config[int(server_id)] = int(channel_id)
     return config
 
