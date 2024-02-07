@@ -16,4 +16,4 @@ asyncio
 requests
 
 # You can download them by typing
-pip install discord.py pyyaml asyncio requests
+pip install discord.py pyyaml asyncio
