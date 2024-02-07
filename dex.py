@@ -85,7 +85,7 @@ async def about(interaction: discord.Interaction):
         title=f"{bot_name}",
         description=f"""
 {about_description}
-Running version 1.2
+Running version 1.3
 
 {total_balls} countryballs to collect
 {player_count} players that caught {total_caught_balls} {collectibles_name}
@@ -259,17 +259,36 @@ class CatchModal(discord.ui.Modal):
 
     async def on_submit(self, interaction: discord.Interaction):
         if self.catch_button.disabled:
-            await interaction.response.send_message("{interaction.user.mention} I've been caught already!", ephemeral=False)
+            await interaction.response.send_message("{interaction.user.mention} Ive been caught already!", ephemeral=False)
             return
 
+        user_owns_ball = check_if_user_owns_ball(interaction.user.id, self.correct_name)
         if self.countryball_name_input.value.lower() == self.correct_name.lower():
             add_caught_ball(interaction.user.id, self.countryball_url, self.correct_name, time.time(), "No")
-            await interaction.response.send_message(f"{interaction.user.mention} You caught **{self.correct_name}!**", ephemeral=False)
+            if user_owns_ball:
+                message_content = f"{interaction.user.mention} You caught **{self.correct_name}!**"
+            else:
+                message_content = f"{interaction.user.mention} You caught **{self.correct_name}!**\n\nThis is a **new {collectibles_name}** that has been added to your collection!"
+            await interaction.response.send_message(message_content, ephemeral=False)
             self.catch_button.disabled = True
-            self.catch_button.label = "Caught!"
+            self.catch_button.label = "Catch me!"
             await interaction.message.edit(view=self.catch_button.view)
         else:
             await interaction.response.send_message(f"{interaction.user.mention} Wrong name!", ephemeral=False)
+
+def check_if_user_owns_ball(user_id, ball_name):
+    """
+    Check if the user already owns the specified ball.
+
+    Parameters:
+    - user_id: The ID of the user.
+    - ball_name: The name of the ball to check.
+
+    Returns:
+    True if the user owns the ball, or False otherwise.
+    """
+    owned_balls = get_caught_balls_for_user(user_id)
+    return any(ball[1].lower() == ball_name.lower() for ball in owned_balls)
 
 spawned_balls = {}
 
