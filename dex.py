@@ -74,6 +74,7 @@ async def on_ready():
     print(f"{time.ctime()} | Prefix: {prefix}")
     print(f"{time.ctime()} | Servers: {len(bot.guilds)}")
     print(f"{time.ctime()} | Commands loaded: {len(bot.commands)}")
+    await tree.sync()
 
 @tree.command(name="about", description="Get information about this bot.")
 async def about(interaction: discord.Interaction):
