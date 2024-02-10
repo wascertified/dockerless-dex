@@ -260,7 +260,7 @@ class CatchModal(discord.ui.Modal):
 
     async def on_submit(self, interaction: discord.Interaction):
         if self.catch_button.disabled:
-            await interaction.response.send_message("{interaction.user.mention} Ive been caught already!", ephemeral=False)
+            await interaction.response.send_message(f"{interaction.user.mention} Ive been caught already!", ephemeral=False)
             return
 
         user_owns_ball = check_if_user_owns_ball(interaction.user.id, self.correct_name)
