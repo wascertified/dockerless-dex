@@ -33,8 +33,8 @@ countryballs = {
 > [!NOTE]
 > An `,` is required after adding the first ball. E.G:
 > 
-> "ball name": "ball url"**,**
->
-> "ball name2": "ball url2"
+> ```py
+> "ball name": "ball url",
+> "ball name2": "ball url2"```
 > 
 > As you can see, the second line doesn't have the `,` like the first one.
