@@ -162,7 +162,7 @@ async def config(interaction: discord.Interaction, channel: discord.TextChannel)
         await interaction.response.send_message(f"A spawn channel is already configured for this server. Use /{slash_command_name}_disableconfig to remove it.")
     else:
         configured_channels[interaction.guild_id] = channel_id
-        with open('configured-channels.yml', 'w') as config_file:
+        with open('ymls/configured-channels.yml', 'w') as config_file:
             yaml.dump({interaction.guild_id: channel_id}, config_file, default_flow_style=False)
         embed = discord.Embed(
             title=f"{bot_name} Activation",
