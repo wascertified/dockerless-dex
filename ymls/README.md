@@ -35,6 +35,7 @@ countryballs = {
 > 
 > ```py
 > "ball name": "ball url",
-> "ball name2": "ball url2"```
+> "ball name2": "ball url2"
+> ```
 > 
 > As you can see, the second line doesn't have the `,` like the first one.
