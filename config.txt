@@ -1,2 +1,1 @@
-channel ID 1:server ID 1
-channel ID 2:server ID 2
+
