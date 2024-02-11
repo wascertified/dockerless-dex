@@ -1,8 +1,9 @@
 # paste the bot token here from https://discord.com/developers/applications
+# the bot token, not application ID.
 bot-token: 
 
 # prefix for old commands (not used in new slash commands)
-text-prefix: 
+text-prefix: b.
 
 about:
 
@@ -16,10 +17,10 @@ about:
   discord-invite: https://discord.gg/
 
 # used for names of collectibles (eg. You caught a new {collectibles-name})
-collectibles-name: 
+collectibles-name: ball
 
-# the name of the bot (eg. dexcord) -- NO SPACES --
-bot-name: 
+# the name of the bot (eg. catsdex) -- NO SPACES --
+bot-name: Dockerless-Dex
 
-# this is /dexs by default, but you can change it for /animals or /rocks for example -- NO SPACES, LOWERCASE --
-players-group-cog-name: 
+# this is /balls by default, but you can change it for /animals or /rocks for example -- NO SPACES, LOWERCASE --
+players-group-cog-name: balls
