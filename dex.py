@@ -11,7 +11,7 @@ import random, asyncio, yaml, os, time, json
 from typing import Literal, Optional
 import sqlite3
 
-with open("settings.yml") as f:
+with open("config.yml") as f:
     settings = yaml.load(f, Loader=yaml.FullLoader)
 
 token = settings["bot-token"]
