@@ -32,10 +32,19 @@ countryballs = {
 ```
 > [!NOTE]
 > An `,` is required after adding the first ball. E.G:
-> 
 > ```py
-> "ball name": "ball url",
-> "ball name2": "ball url2"
+> countryballs = {
+>  "ball name": "ball url",
+>  "ball name2": "ball url2"
+> }
 > ```
-> 
 > As you can see, the second line doesn't have the `,` like the first one.
+
+## configured-channels.yml
+The name should explain itself. But basically; this is where the spawn channels are stored.
+
+The format is something like this:
+```yml
+Guild ID: Channel ID
+Guild ID: Channel ID
+``` 
