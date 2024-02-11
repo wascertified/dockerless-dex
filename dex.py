@@ -109,7 +109,7 @@ async def about(interaction: discord.Interaction):
         title=f"{bot_name}",
         description=f"""
 {about_description}
-Running version 1.3
+Running version 1.4
 
 {total_balls} countryballs to collect
 {player_count} players that caught {total_caught_balls} {collectibles_name}
