@@ -11,7 +11,7 @@ import random, asyncio, yaml, os, time, json
 from typing import Literal, Optional
 import sqlite3
 
-with open("config.yml") as f:
+with open("settings.yml") as f:
     settings = yaml.load(f, Loader=yaml.FullLoader)
 
 token = settings["bot-token"]
@@ -22,29 +22,6 @@ bot_name = settings["bot-name"]
 about_description = settings["about"]["description"]
 github_link = settings["about"]["github-link"]
 discord_invite = settings["about"]["discord-invite"]
-
-if not token:
-    print("No token was found in config.yml! Please check your settings.")
-    exit()
-elif not isinstance(token, str) or len(token) == 0:
-    print("Invalid token, was found, check your config!")
-    exit()
-
-if not prefix:
-    print("No prefix was found in config.yml! Please check your settings.")
-    exit()
-
-if not collectibles_name:
-    print("No collectibles name was found in config.yml! Please check your settings.")
-    exit()
-
-if not slash_command_name:
-    print("No players group cog name was found in config.yml! Please check your settings.")
-    exit()
-
-if not bot_name:
-    print("No bot name was found in config.yml! Please check your settings.")
-    exit()
 
 bot = commands.Bot(command_prefix=prefix, intents=discord.Intents.all())
 bot.remove_command("help")
@@ -109,10 +86,10 @@ async def about(interaction: discord.Interaction):
         title=f"{bot_name}",
         description=f"""
 {about_description}
-Running version 1.4
+Running version [1.4](https://github.com/wascertified/dockerless-dex/releases/tag/1.4)
 
 {total_balls} countryballs to collect
-{player_count} players that caught {total_caught_balls} {collectibles_name}
+{player_count} players that caught {total_caught_balls} {collectibles_name}s
 {len(bot.guilds)} servers playing
 
 This bot was made/coded by wascertified. The github is https://github.com/wascertified
@@ -123,7 +100,7 @@ Support Server: {discord_invite}
     )
     await interaction.response.send_message(embed=embed)
 
-@tree.command(name=f"{slash_command_name}_list", description=f"List your {collectibles_name}.")
+@tree.command(name=f"{slash_command_name}_list", description=f"List your {collectibles_name}s.")
 async def list_collectibles(interaction: discord.Interaction):
     caught_balls = get_caught_balls_for_user(interaction.user.id)
     if caught_balls:
@@ -136,8 +113,8 @@ async def list_collectibles(interaction: discord.Interaction):
             embed.add_field(name=name.capitalize(), value=f"Caught at: <t:{int(timestamp)}:F>", inline=False)
     else:
         embed = discord.Embed(
-            title=f"No {collectibles_name.capitalize()} Found",
-            description=f"You haven't caught any {collectibles_name} yet!",
+            title=f"No {collectibles_name}s found.",
+            description=f"You haven't caught any {collectibles_name}s yet!",
             color=discord.Color.red()
         )
     await interaction.response.send_message(embed=embed)
@@ -172,15 +149,15 @@ async def completion(interaction: discord.Interaction, member: discord.Member = 
         owned_list = ' '.join([ball_to_emoji.get(name, '') or name.capitalize() for name in user_owned_balls.keys()])
         embed.add_field(name=f"Owned {collectibles_name.capitalize()}", value=owned_list, inline=False)
     else:
-        embed.add_field(name=f"Owned {collectibles_name.capitalize()}", value=f"No owned {collectibles_name} yet.", inline=False)
+        embed.add_field(name=f"Owned {collectibles_name}s", value=f"No owned {collectibles_name}s yet.", inline=False)
 
     missing_balls = [(name, url) for name, url in all_balls_data if name not in user_owned_balls]
 
     if missing_balls:
         missing_list = ' '.join([ball_to_emoji.get(name, '') or f"[{name.capitalize()}]({url})" for name, url in missing_balls])
-        embed.add_field(name=f"Missing {collectibles_name.capitalize()}", value=missing_list, inline=False)
+        embed.add_field(name=f"Missing {collectibles_name.capitalize}s", value=missing_list, inline=False)
     else:
-        embed.add_field(name=f"Missing {collectibles_name.capitalize()}", value=f"", inline=False)
+        embed.add_field(name=f"Missing {collectibles_name.capitalize}s", value=f"", inline=False)
 
     await interaction.response.send_message(embed=embed)
 
@@ -374,7 +351,7 @@ async def spawnball(ctx, *, ball_name: str = None):
         random_countryball_name = ball_name
         random_countryball_url = countryballs.get(ball_name)
         if not random_countryball_url:
-            await ctx.send(f"No countryball found with name: {ball_name}")
+            await ctx.send(f"No {collectibles_name} found with name: {ball_name}")
             return
     else:
         countryball_choice = random.choice(list(countryballs.items()))
@@ -408,5 +385,28 @@ async def spawnball(ctx, *, ball_name: str = None):
         }
     except discord.HTTPException as e:
         await ctx.send(f"Failed to send message: {e}")
+
+if not token:
+    print("No token was found in settings.yml! Please check your settings.")
+    exit()
+elif not isinstance(token, str) or len(token) == 0:
+    print("Invalid token, was found, check your settings!")
+    exit()
+
+if not prefix:
+    print("No prefix was found in settings.yml! Please check your settings.")
+    exit()
+
+if not collectibles_name:
+    print("No collectibles name was found in settings.yml! Please check your settings.")
+    exit()
+
+if not slash_command_name:
+    print("No players group cog name was found in settings.yml! Please check your settings.")
+    exit()
+
+if not bot_name:
+    print("No bot name was found in settings.yml! Please check your settings.")
+    exit()
 
 bot.run(token)
