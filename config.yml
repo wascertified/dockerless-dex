@@ -1,9 +1,9 @@
 # paste the bot token here from https://discord.com/developers/applications
 # the bot token, not application ID.
-bot-token: 
+bot-token:  
 
 # prefix for old commands (not used in new slash commands)
-text-prefix: b.
+text-prefix: "b."
 
 about:
 

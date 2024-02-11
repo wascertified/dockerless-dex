@@ -1,5 +1,5 @@
 countryballs = {
-# "ball name": "ball url",
+# "ball name": "ball url"
 # "ball name 2": "ball url 2"
 # add more if you want, this is just an example.
 }
@@ -7,7 +7,7 @@ countryballs = {
 import discord
 from discord.ext import commands, tasks
 from discord import app_commands
-import random, asyncio, yaml, os, time, json
+import random, asyncio, yaml, os, time
 from typing import Literal, Optional
 import sqlite3
 
@@ -54,16 +54,9 @@ def get_caught_balls_for_user(user_id):
 
 def read_config_file():
     config = {}
-    if os.path.exists("config.txt"):
-        with open("config.txt", "r") as file:
-            lines = file.readlines()
-            for line in lines:
-                channel_id, server_id = line.strip().split(':')
-                if channel_id.strip() == "channel ID 1" and server_id.strip() == "server ID 1":
-                    continue
-                if channel_id.strip() == "channel ID 2" and server_id.strip() == "server ID 2":
-                    continue
-                config[int(server_id)] = int(channel_id)
+    if os.path.exists("ymls/configured-channels.yml"):
+        with open("ymls/configured-channels.yml", "r") as file:
+            config = yaml.safe_load(file) or {}
     return config
 
 configured_channels = read_config_file()
@@ -105,7 +98,7 @@ async def list_collectibles(interaction: discord.Interaction):
     caught_balls = get_caught_balls_for_user(interaction.user.id)
     if caught_balls:
         embed = discord.Embed(
-            title=f"Your {collectibles_name.capitalize()}",
+            title=f"Your {collectibles_name}",
             description="Here is what you own:",
             color=discord.Color.blue()
         )
@@ -136,7 +129,7 @@ async def completion(interaction: discord.Interaction, member: discord.Member = 
         await interaction.response.send_message(f"No {collectibles_name} added yet.")
         return
         
-    with open('emojis.yml', 'r') as emojis_file:
+    with open('ymls/emojis.yml', 'r') as emojis_file:
         ball_to_emoji = yaml.safe_load(emojis_file).get("ball_to_emoji", {})
 
     embed = discord.Embed(
@@ -162,15 +155,15 @@ async def completion(interaction: discord.Interaction, member: discord.Member = 
     await interaction.response.send_message(embed=embed)
 
 @tree.command(name=f'{slash_command_name}_config', description='Configure a spawn channel for the server.')
-@commands.has_permissions(administrator=True)
+@commands.has_permissions(manage_channels=True)
 async def config(interaction: discord.Interaction, channel: discord.TextChannel):
     channel_id = channel.id
     if interaction.guild_id in configured_channels:
-        await interaction.response.send_message("A spawn channel is already configured for this server. Use /disableconfig to remove it.")
+        await interaction.response.send_message(f"A spawn channel is already configured for this server. Use /{slash_command_name}_disableconfig to remove it.")
     else:
         configured_channels[interaction.guild_id] = channel_id
-        with open('config.txt', 'a') as config_file:
-            config_file.write(f"{channel_id}:{interaction.guild_id}\n")
+        with open('configured-channels.yml', 'w') as config_file:
+            yaml.dump({interaction.guild_id: channel_id}, config_file, default_flow_style=False)
         embed = discord.Embed(
             title=f"{bot_name} Activation",
             description=f"{bot_name} is now configured in {channel.mention}! To remove this spawn channel, use the `/{slash_command_name}_disableconfig` command.\n\n"
@@ -182,13 +175,19 @@ async def config(interaction: discord.Interaction, channel: discord.TextChannel)
 @tree.command(name=f'{slash_command_name}_disableconfig', description='Disable the spawn channel for the server.')
 @commands.has_permissions(administrator=True)
 async def disableconfig(interaction: discord.Interaction):
-    guild_id_str = f":{interaction.guild_id}"
-    if interaction.guild_id in configured_channels:
-        del configured_channels[interaction.guild_id]
-        with open('config.txt', 'r') as config_file:
-            lines = [line for line in config_file if not line.strip().endswith(guild_id_str)]
-        with open('config.txt', 'w') as config_file:
-            config_file.writelines(lines)
+    guild_id = interaction.guild_id
+    if guild_id in configured_channels:
+        del configured_channels[guild_id]
+        
+        with open('ymls/configured-channels.yml', 'r') as config_file:
+            config_dict = yaml.safe_load(config_file) or {}
+
+        if str(guild_id) in config_dict:
+            del config_dict[str(guild_id)]
+         
+        with open('ymls/configured-channels.yml', 'w') as config_file:
+            yaml.dump(config_dict, config_file, default_flow_style=False)
+        
         await interaction.response.send_message(f"{bot_name} spawn channel configuration has been removed for this server.")
     else:
         await interaction.response.send_message("No spawn channel is currently configured for this server.")
@@ -387,7 +386,7 @@ async def spawnball(ctx, *, ball_name: str = None):
         await ctx.send(f"Failed to send message: {e}")
 
 if not token:
-    print("No token was found in settings.yml! Please check your settings.")
+    print("No token was found in config.yml! Please check your settings.")
     exit()
 elif not isinstance(token, str) or len(token) == 0:
     print("Invalid token, was found, check your settings!")
