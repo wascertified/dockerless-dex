@@ -11,7 +11,7 @@ import random, asyncio, yaml, os, time, json
 from typing import Literal, Optional
 import sqlite3
 
-with open("settings.yml") as f:
+with open("config.yml") as f:
     settings = yaml.load(f, Loader=yaml.FullLoader)
 
 token = settings["bot-token"]
@@ -22,6 +22,29 @@ bot_name = settings["bot-name"]
 about_description = settings["about"]["description"]
 github_link = settings["about"]["github-link"]
 discord_invite = settings["about"]["discord-invite"]
+
+if not token:
+    print("No token was found in config.yml! Please check your settings.")
+    exit()
+elif not isinstance(token, str) or len(token) == 0:
+    print("Invalid token, was found, check your config!")
+    exit()
+
+if not prefix:
+    print("No prefix was found in config.yml! Please check your settings.")
+    exit()
+
+if not collectibles_name:
+    print("No collectibles name was found in config.yml! Please check your settings.")
+    exit()
+
+if not slash_command_name:
+    print("No players group cog name was found in config.yml! Please check your settings.")
+    exit()
+
+if not bot_name:
+    print("No bot name was found in config.yml! Please check your settings.")
+    exit()
 
 bot = commands.Bot(command_prefix=prefix, intents=discord.Intents.all())
 bot.remove_command("help")
