@@ -78,7 +78,7 @@ async def about(interaction: discord.Interaction):
         title=f"{bot_name}",
         description=f"""
 {about_description}
-Currently running version [1.6](https://github.com/wascertified/dockerless-dex/releases/tag/1.6)
+Currently running version [1.5](https://github.com/wascertified/dockerless-dex/releases/tag/1.5)
 
 {total_balls} {collectibles_name}s to collect
 {player_count} players that caught {total_caught_balls} {collectibles_name}s
@@ -231,7 +231,7 @@ async def ping(interaction: discord.Interaction):
 @bot.command()
 @commands.is_owner()
 async def kill(ctx):
-    await ctx.send("dying!! :sob:")
+    await ctx.send("dying!! 😭")
     await bot.close()
 
 @bot.command()
@@ -268,7 +268,7 @@ class CatchModal(discord.ui.Modal):
 
         user_owns_ball = check_if_user_owns_ball(interaction.user.id, self.correct_name)
         shiny_status = "Yes" if random.randint(1, 2048) == 1 else "No"
-        shiny_message = f"\n:star: **It's a shiny {collectibles_name}** :star:" if shiny_status == "Yes" else ""
+        shiny_message = f"\n⭐ **It's a shiny {collectibles_name}** ⭐" if shiny_status == "Yes" else ""
 
         if self.countryball_name_input.value.lower() == self.correct_name.lower():
             add_caught_ball(interaction.user.id, self.countryball_url, self.correct_name, time.time(), shiny_status)
@@ -281,7 +281,7 @@ class CatchModal(discord.ui.Modal):
             self.catch_button.label = "Caught!"
             await interaction.message.edit(view=self.catch_button.view)
         else:
-            await interaction.response.send_message(f"{interaction.user.mention} Wrong name!", ephemeral=False)
+            await interaction.response.send_message(f"{interaction.user.mention} Wrong name! You wrote: {self.countryball_name_input}", ephemeral=False)
 
 def check_if_user_owns_ball(user_id, ball_name):
     """
@@ -414,5 +414,5 @@ if not slash_command_name:
 if not bot_name:
     print("No bot name was found in settings.yml! Please check your settings.")
     exit()
-
+  
 bot.run(token)

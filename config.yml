@@ -5,7 +5,7 @@ text-prefix: "b." # The prefix for text commands. They can be found at the READM
 
 # Stuff that will be shown on /about.
 about:
-  description: "Collect balls on Discord. Made for people without docker / pc" # Main description. I recommend editing the /about command directly.
+  description: "Collect balls on Discord. Made for people without Docker or PC." # Edits the first line of /about.
   github-link: "https://github.com/wascertified/dockerless-dex" # Only change this if you have a fork, this is not required and can be skipped.
   discord-invite: "https://discord.gg/RSdcTAn7FG" # Change to your discord server.
 
