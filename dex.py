@@ -259,19 +259,22 @@ class CatchModal(discord.ui.Modal):
 
     async def on_submit(self, interaction: discord.Interaction):
         if self.catch_button.disabled:
-            await interaction.response.send_message(f"{interaction.user.mention} Ive been caught already!", ephemeral=False)
+            await interaction.response.send_message(f"{interaction.user.mention} I've been caught already!", ephemeral=False)
             return
 
         user_owns_ball = check_if_user_owns_ball(interaction.user.id, self.correct_name)
+        shiny_status = "Yes" if random.randint(1, 1) == 1 else "No"
+        shiny_message = f"\n:star: **It's a shiny {collectibles_name}** :star:" if shiny_status == "Yes" else ""
+
         if self.countryball_name_input.value.lower() == self.correct_name.lower():
-            add_caught_ball(interaction.user.id, self.countryball_url, self.correct_name, time.time(), "No")
-            if user_owns_ball:
-                message_content = f"{interaction.user.mention} You caught **{self.correct_name}!**"
-            else:
-                message_content = f"{interaction.user.mention} You caught **{self.correct_name}!**\n\nThis is a **new {collectibles_name}** that has been added to your collection!"
+            add_caught_ball(interaction.user.id, self.countryball_url, self.correct_name, time.time(), shiny_status)
+            message_content = f"{interaction.user.mention} You caught **{self.correct_name}!**"
+            if not user_owns_ball:
+                message_content += f"\n\nThis is a **new {collectibles_name}** that has been added to your collection!"
+            message_content += shiny_message
             await interaction.response.send_message(message_content, ephemeral=False)
             self.catch_button.disabled = True
-            self.catch_button.label = "Catch me!"
+            self.catch_button.label = "Caught!"
             await interaction.message.edit(view=self.catch_button.view)
         else:
             await interaction.response.send_message(f"{interaction.user.mention} Wrong name!", ephemeral=False)
