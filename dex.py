@@ -1,15 +1,14 @@
-countryballs = {
-# "ball name": "ball url",
-# "ball name 2": "ball url 2"
-# add more if you want, this is just an example.
-}
-
 import discord
 from discord.ext import commands, tasks
 from discord import app_commands
 import random, asyncio, yaml, os, time
 from typing import Literal, Optional
 import sqlite3
+
+with open("ymls/collectibles.yml") as f:
+    collectibles = yaml.load(f, Loader=yaml.FullLoader)
+
+countryballs = collectibles['countryballs']
 
 with open("config.yml") as f:
     settings = yaml.load(f, Loader=yaml.FullLoader)
@@ -129,7 +128,7 @@ async def completion(interaction: discord.Interaction, member: discord.Member = 
         await interaction.response.send_message(f"No {collectibles_name} added yet.")
         return
         
-    with open('ymls/emojis.yml', 'r') as emojis_file:
+    with open('ymls/collectibles.yml', 'r') as emojis_file:
         ball_to_emoji = yaml.safe_load(emojis_file).get("ball_to_emoji", {})
 
     embed = discord.Embed(
