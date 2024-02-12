@@ -237,8 +237,13 @@ async def kill(ctx):
 
 @bot.command()
 @commands.is_owner()
-async def giveball(ctx, user: discord.User, url: str, shiny_status: Optional[str] = "No"):
+async def giveball(ctx, user: discord.User, url: str):
     ballname = url.split('/')[-1].split('.')[0]
+    if ballname not in countryballs:
+        await ctx.send(f"The {collectibles_name} with name \"{ballname}\" does not exist.")
+        return
+
+    shiny_status = "No"
     timestamp = time.time()
     add_caught_ball(user.id, url, ballname, timestamp, shiny_status)
     await ctx.send(f"The \"{ballname}\" {collectibles_name} was given to {user.display_name}.")
