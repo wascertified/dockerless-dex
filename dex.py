@@ -97,7 +97,7 @@ async def list_collectibles(interaction: discord.Interaction):
     caught_balls = get_caught_balls_for_user(interaction.user.id)
     if caught_balls:
         embed = discord.Embed(
-            title=f"Your {collectibles_name}",
+            title=f"Your {collectibles_name}s",
             description="Here is what you own:",
             color=discord.Color.blue()
         )
