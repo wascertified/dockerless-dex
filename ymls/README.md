@@ -31,7 +31,7 @@ countryballs = {
 }
 ```
 > [!NOTE]
-> An `,` is required after adding the first ball. E.G:
+> A `,` is required after adding the first ball. E.G:
 > ```py
 > countryballs = {
 >  "ball name": "ball url", # < Comma
@@ -48,3 +48,51 @@ The format is something like this:
 Guild ID: Channel ID
 Guild ID: Channel ID
 ``` 
+## config.yml
+The configuration file. Editing this file is **required** to edit **no matter what**.
+
+Here's the file: *(For previewing.)*
+```yml
+# Welcome to the config file. Please read the README.md file found at the ymls folder.
+
+bot-token: "Your Token Here" # The bot token for your bot.
+text-prefix: "b." # The prefix for text commands. They can be found at the README file mentioned above.
+
+# Stuff that will be shown on /about.
+about:
+  description: "Collect balls on Discord. Made for people without docker / pc" # Main description. I recommend editing the /about command directly.
+  github-link: "https://github.com/wascertified/dockerless-dex" # Only change this if you have a fork, this is not required and can be skipped.
+  discord-invite: "https://discord.gg/RSdcTAn7FG" # Change to your discord server.
+
+# Stuff that will be used on commands.
+collectibles-name: "ball" # Don't add an "s" as the bot will already add the extra "s".
+bot-name: "Dockerless-Dex" # The name of the dex.
+players-group-cog-name: "balls" # No spaces, must be lowercase.
+```
+> [!NOTE]
+> The `bot-token` is required. You can find the the proccess of getting your token [here](https://youtu.be/watch?v=aI4OmIbkJH8).
+
+### What Does This Do?
+This section is for seeing what X thing does.
+#### Main
+1. bot-token
+   - Tells `dex.py` the discord bot token so it can run it.
+2. text-prefix
+   - The prefix for text-based commands. Some of them include `giveball`, `spawnball`, and `reloadtree`.
+     - `giveball {user} {valid_collectable}` | {user} must be a user mention or user ID.
+     - `spawnball {valid_collectable}` | The collectable is optional.
+     - `reloadtree` | Reloads trees. *(slash commands)*
+#### /about Section
+1. description
+   - The text that will be shown at the start of `/about`.
+2. github-link
+   - Changes the github link present in `/about`. It is not required to edit this nor to make a fork.
+3. discord-invite
+   - Changes the discord invite present in `/about`. Defaults to the support server, change if you have an official server.
+#### Commands Section
+1. collectibles-name
+   - Changes the messages in the bot to refer to your collectables. E.G: You caught a new ball!
+2. bot-name
+   - Changes the messages in the bot to refer to your bot. E.G: Dockerless-Dex will start spawning balls in this channel. *(Not an actual message inside the bot, but you get the point.)*
+3. players-group-cog-name
+   - Changes the begginning of the commands for your bot. E.G: /balls_list *(Please note that it can only be lowercase and can't contain spaces.)*

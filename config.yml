@@ -1,26 +1,15 @@
-# paste the bot token here from https://discord.com/developers/applications
-# the bot token, not application ID.
-bot-token:  
+# Welcome to the config file. Please read the README.md file found at the ymls folder.
 
-# prefix for old commands (not used in new slash commands)
-text-prefix: "b."
+bot-token: "Your Token Here" # The bot token for your bot.
+text-prefix: "b." # The prefix for text commands. They can be found at the README file mentioned above.
 
+# Stuff that will be shown on /about.
 about:
+  description: "Collect balls on Discord. Made for people without docker / pc" # Main description. I recommend editing the /about command directly.
+  github-link: "https://github.com/wascertified/dockerless-dex" # Only change this if you have a fork, this is not required and can be skipped.
+  discord-invite: "https://discord.gg/RSdcTAn7FG" # Change to your discord server.
 
-  # the begginging of the /about
-  description: Collect balls on Discord. Made for people without docker / pc
-  
-  # override this if you have a fork
-  github-link: https://github.com/wascertified/dockerless-dex
-
-  # valid invite for a Discord server
-  discord-invite: https://discord.gg/
-
-# used for names of collectibles (eg. You caught a new {collectibles-name})
-collectibles-name: ball
-
-# the name of the bot (eg. catsdex) -- NO SPACES --
-bot-name: Dockerless-Dex
-
-# this is /balls by default, but you can change it for /animals or /rocks for example -- NO SPACES, LOWERCASE --
-players-group-cog-name: balls
+# Stuff that will be used on commands.
+collectibles-name: "ball" # Don't add an "s" as the bot will already add the extra "s".
+bot-name: "Dockerless-Dex" # The name of the dex.
+players-group-cog-name: "balls" # No spaces, must be lowercase.
