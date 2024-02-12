@@ -12,7 +12,7 @@ ball_to_emoji:
 ```
 The YML file above is the main thing that makes the collectibles have their emojis at /completion.
 
-This is what it would look like if we were to add a "full_rat" ball.
+This is what it would look like if we were to add a "full rat" ball.
 ```yml
 ball_to_emoji:
   full rat: <:full_rat:1205271877245730878>
@@ -25,7 +25,7 @@ You can see the "ball 2" has been "removed". This is so there aren't any issues.
 This is what the top of our [dex.py](https://github.com/wascertified/dockerless-dex/blob/main/dex.py) file would look like:
 ```py
 countryballs = {
- "perfect rat": "https://bigrat.monster/media/perfect.png"
+ "full rat": "https://bigrat.monster/media/perfect.png"
 # "ball name 2": "ball url 2"
 # add more if you want, this is just an example.
 }
@@ -34,7 +34,7 @@ countryballs = {
 > An `,` is required after adding the first ball. E.G:
 > ```py
 > countryballs = {
->  "ball name": "ball url",
+>  "ball name": "ball url", # < Comma
 >  "ball name2": "ball url2"
 > }
 > ```
