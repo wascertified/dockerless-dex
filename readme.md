@@ -8,7 +8,7 @@ Below are the installation process for various systems, aswell as some other stu
 ```sh
 sudo pacman -S python python-pip git neovim nano
 ```
-*(`git`, `nano`, and `neovim` are optional as `git` will be used for cloning the repository. `nano` and `neovim` are used for editing text through the terminal; you will probably have those three already installed, depending on your distribution or previous actions.)*
+*(`git`, `nano`, and `neovim` are __optional__ as `git` will be used for cloning the repository. `nano` and `neovim` are used for editing text through the terminal; you will probably have those three already installed, depending on your distribution or previous actions.)*
 
 2. After installing the packages, clone the repository with `git` or download it manually from [here](https://github.com/wascertified/dockerless-dex/releases).
 ```sh
@@ -68,5 +68,5 @@ python dex.py # Believing you're still in the dockerless-dex/ folder.
 
 Found an issue? Got a question? Something just didn't work?
 
-**[Join the support discord server](discord.gg/RSdcTAn7FG)**!
+**[Join the support discord server](https://discord.gg/RSdcTAn7FG)**!
 
