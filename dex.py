@@ -268,7 +268,7 @@ class CatchModal(discord.ui.Modal):
             return
 
         user_owns_ball = check_if_user_owns_ball(interaction.user.id, self.correct_name)
-        shiny_status = "Yes" if random.randint(1, 1) == 1 else "No"
+        shiny_status = "Yes" if random.randint(1, 2048) == 1 else "No"
         shiny_message = f"\n:star: **It's a shiny {collectibles_name}** :star:" if shiny_status == "Yes" else ""
 
         if self.countryball_name_input.value.lower() == self.correct_name.lower():
