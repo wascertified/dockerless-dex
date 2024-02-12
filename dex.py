@@ -140,7 +140,7 @@ async def completion(interaction: discord.Interaction, member: discord.Member = 
 
     if user_owned_balls:
         owned_list = ' '.join([ball_to_emoji.get(name, '') or name.capitalize() for name in user_owned_balls.keys()])
-        embed.add_field(name=f"Owned {collectibles_name.capitalize()}", value=owned_list, inline=False)
+        embed.add_field(name=f"Owned {collectibles_name}s", value=owned_list, inline=False)
     else:
         embed.add_field(name=f"Owned {collectibles_name}s", value=f"No owned {collectibles_name}s yet.", inline=False)
 
@@ -148,9 +148,9 @@ async def completion(interaction: discord.Interaction, member: discord.Member = 
 
     if missing_balls:
         missing_list = ' '.join([ball_to_emoji.get(name, '') or f"[{name.capitalize()}]({url})" for name, url in missing_balls])
-        embed.add_field(name=f"Missing {collectibles_name.capitalize}s", value=missing_list, inline=False)
+        embed.add_field(name=f"Missing {collectibles_name}s", value=missing_list, inline=False)
     else:
-        embed.add_field(name=f"Missing {collectibles_name.capitalize}s", value=f"", inline=False)
+        embed.add_field(name=f"Missing {collectibles_name}s", value=f"", inline=False)
 
     await interaction.response.send_message(embed=embed)
 
