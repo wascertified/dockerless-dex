@@ -1,5 +1,0 @@
-ball_to_emoji:
-  ball 1: emoji
-  ball 2: emoji again
-
-# note, it doesnt need the ID, it needs the ACTUAL emoji id (something like <:full_rat:1205271877245730878>), you can get it by doing \:emoji_name: please note that it is CasE SensItivE
