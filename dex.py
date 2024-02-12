@@ -78,8 +78,8 @@ async def about(interaction: discord.Interaction):
         title=f"{bot_name}",
         description=f"""
 {about_description}
-Currently running version [1.5](https://github.com/wascertified/dockerless-dex/releases/tag/1.5)
 
+Currently running version [1.6](https://github.com/wascertified/dockerless-dex/releases/tag/1.6)
 {total_balls} {collectibles_name}s to collect
 {player_count} players that caught {total_caught_balls} {collectibles_name}s
 {len(bot.guilds)} servers playing
