@@ -34,7 +34,15 @@ source ".venv/bin/activate" # Activates the .venv folder. This will only work if
 
 pip install discord.py pyyaml requests # Installs dependencies.
 ```
-5. If everything you did turned out well, you can *finally* run the bot.
+
+5. Now that you got everything ready, make sure that:
+   - You have everything under Bot -> Priviliged Gateway Intents ![](https://cdn.discordapp.com/attachments/1204312915432439840/1206397619564314624/image.png?ex=65dbdc56&is=65c96756&hm=e4ddfb943bde269418170012b27f139380becd18c4e32b929e7d1a023aac16d2&)
+   - Have a correct invite link. ![](https://cdn.discordapp.com/attachments/1204312915432439840/1206397813412335626/image.png?ex=65dbdc84&is=65c96784&hm=6979555fce3770d1f2c4aff7aae8925a8eefee8fa63b88c5e57b42833628939e&)
+     - You get that all that done [here](https://discord.com/developers).
+
+7. You can find some documentaion on how to add collectables [here](https://github.com/wascertified/dockerless-dex/tree/main/ymls). The link mentioned also works as a guide for the YML files.
+
+8. If everything you did turned out well, you can *finally* run the bot.
 
 ```sh
 python dex.py # Believing you're still in the dockerless-dex/ folder.
