@@ -9,8 +9,8 @@ countryballs:
     ball 2: url again
 
 ball_to_emoji:
-    ball 1: emoji
-    ball 2: emoji again
+  ball 1: emoji
+  ball 2: emoji again
 
 # i recommend reading the README inside this folder
 # note, it doesnt need the ID, it needs the ACTUAL emoji id (something like <:full_rat:1205271877245730878>), you can get it by doing \:emoji_name: please note that it is CasE SensItivE
@@ -45,7 +45,7 @@ This section is for seeing what X thing does.
    - `ball 1`
      - The collectible that will have the emoji. The collectible must be added in `countryballs`. E.G:   `full rat`
    - `emoji`
-     - The emoji to be used in `/completion`. Get your emoji ID by sending this to a discord channel: `\:the_name_of_your_emoji:` then copy the text. It will look something like `<:the_name_of_your_emoji:1234567890>`, copy that and paste it. E.G: `<:full_rat:1205271877245730878>`
+     - The emoji to be used in `/completion`. Get your emoji ID by sending this to a discord channel: `\:the_name_of_your_emoji:` then copy the text. It will look something like `<:the_name_of_your_emoji:1234567890>`, copy that and paste it.
 
 ## configured-channels.yml
 The name should explain itself. But basically; this is where the spawn channels are stored.

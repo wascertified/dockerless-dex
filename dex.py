@@ -78,8 +78,8 @@ async def about(interaction: discord.Interaction):
         title=f"{bot_name}",
         description=f"""
 {about_description}
+Currently running version [1.5](https://github.com/wascertified/dockerless-dex/releases/tag/1.5)
 
-Currently running version [1.6](https://github.com/wascertified/dockerless-dex/releases/tag/1.6)
 {total_balls} {collectibles_name}s to collect
 {player_count} players that caught {total_caught_balls} {collectibles_name}s
 {len(bot.guilds)} servers playing
@@ -256,7 +256,7 @@ class CatchModal(discord.ui.Modal):
         self.countryball_name_input = discord.ui.TextInput(
             label=f'Name this {collectibles_name}!',
             style=discord.TextStyle.short,
-            placeholder=f'What is the name of this {collectibles_name}',
+            placeholder=f'What is the name of this {collectibles_name}?',
             required=True
         )
         self.add_item(self.countryball_name_input)
@@ -281,7 +281,7 @@ class CatchModal(discord.ui.Modal):
             self.catch_button.label = "Caught!"
             await interaction.message.edit(view=self.catch_button.view)
         else:
-            await interaction.response.send_message(f"{interaction.user.mention} Wrong name! You wrote: {self.countryball_name_input}", ephemeral=False)
+            await interaction.response.send_message(f"{interaction.user.mention} Wrong name! You wrote: **{self.countryball_name_input}**", ephemeral=False)
 
 def check_if_user_owns_ball(user_id, ball_name):
     """
