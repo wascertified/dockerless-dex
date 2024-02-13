@@ -13,6 +13,9 @@ countryballs = collectibles['countryballs']
 with open("config.yml") as f:
     settings = yaml.load(f, Loader=yaml.FullLoader)
 
+with open('ymls/collectibles.yml', 'r') as emojis_file:
+    ball_to_emoji = yaml.safe_load(emojis_file).get("ball_to_emoji", {})
+
 token = settings["bot-token"]
 prefix = settings["text-prefix"]
 collectibles_name = settings["collectibles-name"]
@@ -73,23 +76,32 @@ async def about(interaction: discord.Interaction):
     total_balls = len(countryballs)
     player_count = cursor.execute("SELECT COUNT(DISTINCT user_id) FROM caught_balls").fetchone()[0]
     total_caught_balls = cursor.execute("SELECT COUNT(*) FROM caught_balls").fetchone()[0]
+    
+    if total_balls < 16:
+        balls_to_show = " ".join(random.choices(list(ball_to_emoji.values()), k=total_balls))
+    elif total_balls == 1:
+        balls_to_show = " ".join(random.choices(list(ball_to_emoji.values()), k=1))
+    else:
+        balls_to_show = " ".join(random.choices(list(ball_to_emoji.values()), k=16))
 
     embed = discord.Embed(
         title=f"{bot_name}",
         description=f"""
+{balls_to_show}
 {about_description}
-
 Currently running version [1.6](https://github.com/wascertified/dockerless-dex/releases/tag/1.6)
+
 {total_balls} {collectibles_name}s to collect
 {player_count} players that caught {total_caught_balls} {collectibles_name}s
 {len(bot.guilds)} servers playing
 
-This bot was made/coded by wascertified. The github is https://github.com/wascertified
+This bot was made/coded by wascertified.
 
-Support Server: {discord_invite}
+[Discord Server]({discord_invite}) | [GitHub]({github_link}) | [Invite me!](https://discord.com/api/oauth2/authorize?client_id={bot.user.id}&permissions=8&scope=bot+applications.commands)
         """,
         color=discord.Color.blurple()
     )
+    embed.set_thumbnail(url=bot.user.avatar.url)
     await interaction.response.send_message(embed=embed)
 
 @tree.command(name=f"{slash_command_name}_list", description=f"List your {collectibles_name}s.")
