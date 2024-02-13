@@ -107,24 +107,30 @@ This bot was made/coded by wascertified.
     await interaction.response.send_message(embed=embed)
 
 @tree.command(name=f"{slash_command_name}_list", description=f"List your {collectibles_name}s.")
-async def list_collectibles(interaction: discord.Interaction):
-    caught_balls = get_caught_balls_for_user(interaction.user.id)
+async def list(interaction: discord.Interaction, user: discord.Member = None):
+    if user is None:
+        user = interaction.user
+    caught_balls = get_caught_balls_for_user(user.id)
+    embed = discord.Embed(
+        title=f"{user.display_name}'s {collectibles_name}",
+        color=discord.Color.blue() if caught_balls else discord.Color.red()
+    )
     if caught_balls:
-        embed = discord.Embed(
-            title=f"Your {collectibles_name}s",
-            description="Here is what you own:",
-            color=discord.Color.blue()
-        )
-        for url, name, timestamp in caught_balls:
-            embed.add_field(name=name.capitalize(), value=f"Caught at: <t:{int(timestamp)}:F>", inline=False)
+        embed.description = "Here is what they own:"
+        for url, name, timestamp, shiny_status, _, _ in caught_balls:
+            try:
+                if shiny_status:
+                    emoji_id = ":star:"
+                else:
+                    emoji_id = ball_to_emoji.get(name)
+                name_with_emoji = f"{emoji_id} | {name.capitalize()}" if emoji_id else name.capitalize()
+                embed.add_field(name=name_with_emoji, value=f"Caught at: <t:{int(timestamp)}:F>", inline=False)
+            except ValueError as ve:
+                print(f"Invalid ball information format: {ve}")
+                continue
     else:
-        embed = discord.Embed(
-            title=f"No {collectibles_name}s found.",
-            description=f"You haven't caught any {collectibles_name}s yet!",
-            color=discord.Color.red()
-        )
-    await interaction.response.send_message(embed=embed)
-    
+        embed.description = f"They haven't caught any {collectibles_name}s yet!"
+    await interaction.response.send_message(embed=embed)    
 @tree.command(name=f"{slash_command_name}_completion", description=f"Show your current completion of {bot_name}.")
 async def completion(interaction: discord.Interaction, member: discord.Member = None):
     if member is None:
