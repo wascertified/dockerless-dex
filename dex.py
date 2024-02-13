@@ -40,17 +40,19 @@ cursor.execute("""
         url TEXT,
         name TEXT,
         timestamp REAL,
-        shiny_status TEXT
+        shiny_status TEXT,
+        hp INTEGER,
+        attack INTEGER
     )
 """)
 
-def add_caught_ball(user_id, url, name, timestamp, shiny_status):
-    cursor.execute("INSERT INTO caught_balls (user_id, url, name, timestamp, shiny_status) VALUES (?, ?, ?, ?, ?)",
-                   (user_id, url, name, timestamp, shiny_status))
+def add_caught_ball(user_id, url, name, timestamp, shiny_status, hp, attack):
+    cursor.execute("INSERT INTO caught_balls (user_id, url, name, timestamp, shiny_status, hp, attack) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                   (user_id, url, name, timestamp, shiny_status, hp, attack))
     conn.commit()
 
 def get_caught_balls_for_user(user_id):
-    cursor.execute("SELECT url, name, timestamp FROM caught_balls WHERE user_id = ?", (user_id,))
+    cursor.execute("SELECT url, name, timestamp, shiny_status, hp, attack FROM caught_balls WHERE user_id = ?", (user_id,))
     rows = cursor.fetchall()
     return rows
 
@@ -268,23 +270,31 @@ class CatchModal(discord.ui.Modal):
         self.countryball_name_input = discord.ui.TextInput(
             label=f'Name this {collectibles_name}!',
             style=discord.TextStyle.short,
-            placeholder=f'What is the name of this {collectibles_name}?',
+            placeholder=f'What is the name of this {collectibles_name}',
             required=True
         )
         self.add_item(self.countryball_name_input)
+        self.stats = {}
 
     async def on_submit(self, interaction: discord.Interaction):
         if self.catch_button.disabled:
             await interaction.response.send_message(f"{interaction.user.mention} I've been caught already!", ephemeral=False)
             return
 
+        if self.correct_name.lower() == "ball 1":
+            self.stats['hp'] = random.randint(600, 610)
+            self.stats['attack'] = random.randint(760, 770)
+        else:
+            self.stats['hp'] = random.randint(50, 60)
+            self.stats['attack'] = random.randint(75, 85)
+
         user_owns_ball = check_if_user_owns_ball(interaction.user.id, self.correct_name)
-        shiny_status = "Yes" if random.randint(1, 2048) == 1 else "No"
-        shiny_message = f"\n⭐ **It's a shiny {collectibles_name}** ⭐" if shiny_status == "Yes" else ""
+        shiny_status = "Yes" if random.randint(1, 1) == 1 else "No"
+        shiny_message = f"\n:star: **It's a shiny {collectibles_name}** :star:" if shiny_status == "Yes" else ""
 
         if self.countryball_name_input.value.lower() == self.correct_name.lower():
-            add_caught_ball(interaction.user.id, self.countryball_url, self.correct_name, time.time(), shiny_status)
-            message_content = f"{interaction.user.mention} You caught **{self.correct_name}!**"
+            add_caught_ball(interaction.user.id, self.countryball_url, self.correct_name, time.time(), shiny_status, self.stats['hp'], self.stats['attack'])
+            message_content = f"{interaction.user.mention} You caught **{self.correct_name}!** (attack: {self.stats['attack']}, hp: {self.stats['hp']})"
             if not user_owns_ball:
                 message_content += f"\n\nThis is a **new {collectibles_name}** that has been added to your collection!"
             message_content += shiny_message
