@@ -16,6 +16,9 @@ with open("config.yml") as f:
 with open('ymls/collectibles.yml', 'r') as emojis_file:
     ball_to_emoji = yaml.safe_load(emojis_file).get("ball_to_emoji", {})
 
+with open('ymls/rarities.yml', 'r') as file:
+    rarities = yaml.safe_load(file)['rarities']
+
 token = settings["bot-token"]
 prefix = settings["text-prefix"]
 collectibles_name = settings["collectibles-name"]
@@ -345,12 +348,14 @@ async def try_spawning_countryball(message):
     if last_spawn_info is None or current_time - last_spawn_info.get('timestamp', 0) >= 3600:
         await spawn_countryball(message.channel)
 
+weighted_countryballs = [name for name, rarity in rarities.items() for _ in range(int(rarity))]
+
 async def spawn_countryball(channel):
-    countryball_choice = random.choice(list(countryballs.items()))
-    random_countryball_name, random_countryball_url = countryball_choice
+    random_countryball_name = random.choices(weighted_countryballs, k=1)[0]
+    random_countryball_url = countryballs[random_countryball_name]
 
     embed = discord.Embed(
-        title=f"A wild {collectibles_name} appeared!"
+        title=f"A wild {random_countryball_name} appeared!"
     )
     embed.set_image(url=random_countryball_url)
 
