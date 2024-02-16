@@ -59,6 +59,34 @@ def get_caught_balls_for_user(user_id):
     rows = cursor.fetchall()
     return rows
 
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS blacklist (
+        id INTEGER PRIMARY KEY,
+        entity_id INTEGER,
+        entity_type TEXT,
+        reason TEXT
+    )
+""")
+
+db_path = "blacklist.db"
+if not os.path.exists(db_path):
+    open(db_path, 'a').close()
+
+def add_to_blacklist(entity_id, entity_type, reason):
+    cursor.execute("INSERT INTO blacklist (entity_id, entity_type, reason) VALUES (?, ?, ?)",
+                   (entity_id, entity_type, reason))
+    conn.commit()
+
+def remove_from_blacklist(entity_id, entity_type):
+    cursor.execute("DELETE FROM blacklist WHERE entity_id = ? AND entity_type = ?",
+                   (entity_id, entity_type))
+    conn.commit()
+
+def is_blacklisted(entity_id, entity_type):
+    cursor.execute("SELECT * FROM blacklist WHERE entity_id = ? AND entity_type = ?",
+                   (entity_id, entity_type))
+    return cursor.fetchone() is not None
+
 def read_config_file():
     config = {}
     if os.path.exists("ymls/configured-channels.yml"):
@@ -76,8 +104,50 @@ async def on_ready():
     print(f"{time.ctime()} | Commands loaded: {len(bot.commands)}")
     await tree.sync()
 
+@bot.command()
+@commands.is_owner()
+async def blacklist(ctx, user: discord.User, *, reason: str):
+    if not is_blacklisted(user.id, 'user'):
+        add_to_blacklist(user.id, 'user', reason)
+        await ctx.send(f"{user.mention} has been blacklisted for reason: {reason}")
+    else:
+        await ctx.send(f"{user.mention} is already blacklisted.")
+
+@bot.command()
+@commands.is_owner()
+async def serverblacklist(ctx, server: discord.Guild, *, reason: str):
+    if not is_blacklisted(server.id, 'server'):
+        add_to_blacklist(server.id, 'server', reason)
+        await ctx.send(f"{server.name} has been blacklisted for reason: {reason}")
+    else:
+        await ctx.send(f"{server.name} is already blacklisted.")
+
+@bot.command()
+@commands.is_owner()
+async def blacklistremove(ctx, user: discord.User):
+    if is_blacklisted(user.id, 'user'):
+        remove_from_blacklist(user.id, 'user')
+        await ctx.send(f"{user.mention} has been removed from the blacklist.")
+    else:
+        await ctx.send(f"{user.mention} is not blacklisted.")
+
+@bot.command()
+@commands.is_owner()
+async def serverblacklistremove(ctx, server: discord.Guild):
+    if is_blacklisted(server.id, 'server'):
+        remove_from_blacklist(server.id, 'server')
+        await ctx.send(f"{server.name} has been removed from the blacklist.")
+    else:
+        await ctx.send(f"{server.name} is not blacklisted.")
+
 @tree.command(name="about", description="Get information about this bot.")
 async def about(interaction: discord.Interaction):
+    user_id = interaction.user.id
+    guild_id = interaction.guild_id
+    if is_blacklisted(user_id, 'user') or (guild_id and is_blacklisted(guild_id, 'server')):
+        await interaction.response.send_message("You or this server are blacklisted from using this bot.", ephemeral=True)
+        return
+
     total_balls = len(countryballs)
     player_count = cursor.execute("SELECT COUNT(DISTINCT user_id) FROM caught_balls").fetchone()[0]
     total_caught_balls = cursor.execute("SELECT COUNT(*) FROM caught_balls").fetchone()[0]
@@ -111,6 +181,12 @@ This bot was made/coded by wascertified.
 
 @tree.command(name=f"{slash_command_name}_list", description=f"List your {collectibles_name}s.")
 async def list(interaction: discord.Interaction, user: discord.Member = None):
+    user_id = interaction.user.id
+    guild_id = interaction.guild_id
+    if is_blacklisted(user_id, 'user') or (guild_id and is_blacklisted(guild_id, 'server')):
+        await interaction.response.send_message("You or this server are blacklisted from using this bot.", ephemeral=True)
+        return
+
     if user is None:
         user = interaction.user
     caught_balls = get_caught_balls_for_user(user.id)
@@ -133,14 +209,20 @@ async def list(interaction: discord.Interaction, user: discord.Member = None):
                 continue
     else:
         embed.description = f"They haven't caught any {collectibles_name}s yet!"
-    await interaction.response.send_message(embed=embed)    
+    await interaction.response.send_message(embed=embed)
+
 @tree.command(name=f"{slash_command_name}_completion", description=f"Show your current completion of {bot_name}.")
 async def completion(interaction: discord.Interaction, member: discord.Member = None):
+    user_id = interaction.user.id
+    guild_id = interaction.guild_id
+    if is_blacklisted(user_id, 'user') or (guild_id and is_blacklisted(guild_id, 'server')):
+        await interaction.response.send_message("You or this server are blacklisted from using this bot.", ephemeral=True)
+        return
+
     if member is None:
         member = interaction.user
 
     username = member.display_name
-    user_id = member.id
 
     owned_balls = get_caught_balls_for_user(user_id)
     user_owned_balls = {ball[1]: ball[0] for ball in owned_balls}
@@ -179,6 +261,12 @@ async def completion(interaction: discord.Interaction, member: discord.Member = 
 @tree.command(name=f'{slash_command_name}_config', description='Configure a spawn channel for the server.')
 @commands.has_permissions(manage_channels=True)
 async def config(interaction: discord.Interaction, channel: discord.TextChannel):
+    user_id = interaction.user.id
+    guild_id = interaction.guild_id
+    if is_blacklisted(user_id, 'user') or (guild_id and is_blacklisted(guild_id, 'server')):
+        await interaction.response.send_message("You or this server are blacklisted from using this bot.", ephemeral=True)
+        return
+
     channel_id = channel.id
     if interaction.guild_id in configured_channels:
         await interaction.response.send_message(f"A spawn channel is already configured for this server. Use /{slash_command_name}_disableconfig to remove it.")
@@ -197,6 +285,12 @@ async def config(interaction: discord.Interaction, channel: discord.TextChannel)
 @tree.command(name=f'{slash_command_name}_disableconfig', description='Disable the spawn channel for the server.')
 @commands.has_permissions(administrator=True)
 async def disableconfig(interaction: discord.Interaction):
+    user_id = interaction.user.id
+    guild_id = interaction.guild_id
+    if is_blacklisted(user_id, 'user') or (guild_id and is_blacklisted(guild_id, 'server')):
+        await interaction.response.send_message("You or this server are blacklisted from using this bot.", ephemeral=True)
+        return
+
     guild_id = interaction.guild_id
     if guild_id in configured_channels:
         del configured_channels[guild_id]
@@ -249,6 +343,12 @@ async def reloadtree(ctx: commands.Context, guilds: commands.Greedy[discord.Obje
 
 @tree.command(name="ping", description="Ping the bot.")
 async def ping(interaction: discord.Interaction):
+    user_id = interaction.user.id
+    guild_id = interaction.guild_id
+    if is_blacklisted(user_id, 'user') or (guild_id and is_blacklisted(guild_id, 'server')):
+        await interaction.response.send_message("You or this server are blacklisted from using this bot.", ephemeral=True)
+        return
+
     await interaction.response.send_message("Pong! {}ms".format(round(bot.latency * 1000)))
 
 @bot.command()
