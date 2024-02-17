@@ -274,7 +274,7 @@ async def rarity(interaction: discord.Interaction):
 
     sorted_rarities = sorted(rarities.items(), key=lambda item: item[1])
 
-    items_per_page = 5
+    items_per_page = 7
     pages = [sorted_rarities[i:i + items_per_page] for i in range(0, len(sorted_rarities), items_per_page)]
     current_page = 0
 
