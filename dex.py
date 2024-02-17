@@ -9,6 +9,7 @@ with open("ymls/collectibles.yml") as f:
     collectibles = yaml.load(f, Loader=yaml.FullLoader)
 
 countryballs = collectibles['countryballs']
+catch_names = collectibles['catch_names']
 
 with open("config.yml") as f:
     settings = yaml.load(f, Loader=yaml.FullLoader)
@@ -394,6 +395,10 @@ class CatchModal(discord.ui.Modal):
             await interaction.response.send_message(f"{interaction.user.mention} I've been caught already!", ephemeral=False)
             return
 
+        input_name = self.countryball_name_input.value.lower()
+        correct_catch_names = {name.lower() for name_list in catch_names.values() for name in (name_list if isinstance(name_list, type([])) else [name_list])}
+        correct_catch_name = input_name in correct_catch_names
+
         if self.correct_name.lower() == "ball 1":
             self.stats['hp'] = random.randint(600, 610)
             self.stats['attack'] = random.randint(760, 770)
@@ -405,7 +410,7 @@ class CatchModal(discord.ui.Modal):
         shiny_status = "Yes" if random.randint(1, 2048) == 1 else "No"
         shiny_message = f"\n:star: **It's a shiny {collectibles_name}** :star:" if shiny_status == "Yes" else ""
 
-        if self.countryball_name_input.value.lower() == self.correct_name.lower():
+        if correct_catch_name and input_name in correct_catch_names:
             add_caught_ball(interaction.user.id, self.countryball_url, self.correct_name, time.time(), shiny_status, self.stats['hp'], self.stats['attack'])
             message_content = f"{interaction.user.mention} You caught **{self.correct_name}!** (attack: {self.stats['attack']}, hp: {self.stats['hp']})"
             if not user_owns_ball:
