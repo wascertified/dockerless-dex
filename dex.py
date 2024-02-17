@@ -27,6 +27,7 @@ bot_name = settings["bot-name"]
 about_description = settings["about"]["description"]
 github_link = settings["about"]["github-link"]
 discord_invite = settings["about"]["discord-invite"]
+authorized_users = settings["authorized_users"]
 
 bot = commands.Bot(command_prefix=prefix, intents=discord.Intents.all())
 bot.remove_command("help")
@@ -48,6 +49,9 @@ cursor.execute("""
         attack INTEGER
     )
 """)
+
+def check_authorized(ctx):
+  return ctx.author.id in authorized_users
 
 def add_caught_ball(user_id, url, name, timestamp, shiny_status, hp, attack):
     cursor.execute("INSERT INTO caught_balls (user_id, url, name, timestamp, shiny_status, hp, attack) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -105,7 +109,7 @@ async def on_ready():
     await tree.sync()
 
 @bot.command()
-@commands.is_owner()
+@commands.check(check_authorized)
 async def blacklist(ctx, user: discord.User, *, reason: str):
     if not is_blacklisted(user.id, 'user'):
         add_to_blacklist(user.id, 'user', reason)
@@ -114,7 +118,7 @@ async def blacklist(ctx, user: discord.User, *, reason: str):
         await ctx.send(f"{user.mention} is already blacklisted.")
 
 @bot.command()
-@commands.is_owner()
+@commands.check(check_authorized)
 async def serverblacklist(ctx, server: discord.Guild, *, reason: str):
     if not is_blacklisted(server.id, 'server'):
         add_to_blacklist(server.id, 'server', reason)
@@ -123,7 +127,7 @@ async def serverblacklist(ctx, server: discord.Guild, *, reason: str):
         await ctx.send(f"{server.name} is already blacklisted.")
 
 @bot.command()
-@commands.is_owner()
+@commands.check(check_authorized)
 async def blacklistremove(ctx, user: discord.User):
     if is_blacklisted(user.id, 'user'):
         remove_from_blacklist(user.id, 'user')
@@ -132,7 +136,7 @@ async def blacklistremove(ctx, user: discord.User):
         await ctx.send(f"{user.mention} is not blacklisted.")
 
 @bot.command()
-@commands.is_owner()
+@commands.check(check_authorized)
 async def serverblacklistremove(ctx, server: discord.Guild):
     if is_blacklisted(server.id, 'server'):
         remove_from_blacklist(server.id, 'server')
@@ -283,7 +287,7 @@ async def config(interaction: discord.Interaction, channel: discord.TextChannel)
         await interaction.response.send_message(embed=embed)
 
 @tree.command(name=f'{slash_command_name}_disableconfig', description='Disable the spawn channel for the server.')
-@commands.has_permissions(administrator=True)
+@commands.has_permissions(manage_channels=True)
 async def disableconfig(interaction: discord.Interaction):
     user_id = interaction.user.id
     guild_id = interaction.guild_id
@@ -310,7 +314,7 @@ async def disableconfig(interaction: discord.Interaction):
 
 @bot.command()
 @commands.guild_only()
-@commands.is_owner()
+@commands.check(check_authorized)
 async def reloadtree(ctx: commands.Context, guilds: commands.Greedy[discord.Object], spec: Optional[Literal["~", "*", "^"]] = None) -> None:
     if not guilds:
         if spec == "~":
@@ -352,13 +356,13 @@ async def ping(interaction: discord.Interaction):
     await interaction.response.send_message("Pong! {}ms".format(round(bot.latency * 1000)))
 
 @bot.command()
-@commands.is_owner()
+@commands.check(check_authorized)
 async def kill(ctx):
     await ctx.send("dying!! 😭")
     await bot.close()
 
 @bot.command()
-@commands.is_owner()
+@commands.check(check_authorized)
 async def giveball(ctx, user: discord.User, url: str):
     ballname = url.split('/')[-1].split('.')[0]
     if ballname not in countryballs:
@@ -483,7 +487,7 @@ async def spawn_countryball(channel):
         print(f"Invalid argument: {e}")
 
 @bot.command()
-@commands.is_owner()
+@commands.check(check_authorized)
 async def spawnball(ctx, *, ball_name: str = None):
     channel = ctx.channel
     if ball_name:
