@@ -55,6 +55,36 @@ The format is something like this:
 Guild ID: Channel ID
 Guild ID: Channel ID
 ``` 
+
+## rarities.yml
+In this file you can set the rarities for your [collectibles](README.md/#collectiblesyml).
+
+The codeblock below includes the default file.
+```yml
+rarities:
+  ball 1: rarity # for example, 1!
+  ball 2: rarity again # for example, 2!
+```
+In this one, you'll do what you did in [collecitbles.yml](README.md/#collectiblesyml) but with rarities instead of emoji IDs or URLs you'll use a number, E.G:
+```yml
+rarities:
+  full rat: 1 # for example, 1!
+#  ball 2: rarity again # for example, 2!
+```
+You can see we commented `ball 2`, this is for the same reason as mentioned above.
+> [!NOTE]
+> The rarity is **NEEDS** to be a __just a number__, this means that you can't have stuff like:
+> ```yml
+> rarities:
+>   full rat: 00000.1 # for example, 1!
+> #  ball 2: rarity again # for example, 2!
+>  ```
+> If  you want something like that, you would probably do something like this:
+> ```yml
+> rarities:
+>    full rat: 000001 # for example, 1!
+> #   ball 2: rarity again # for example, 2!
+> ```
 ## config.yml
 The configuration file. Editing this file is **required** to edit **no matter what**.
 
