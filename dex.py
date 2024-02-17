@@ -263,6 +263,61 @@ async def completion(interaction: discord.Interaction, member: discord.Member = 
 
     await interaction.response.send_message(embed=embed)
 
+@tree.command(name=f"{slash_command_name}_rarity", description=f"Get the rarity of {collectibles_name}!")
+@commands.check(check_authorized)
+async def rarity(interaction: discord.Interaction): 
+    with open('ymls/rarities.yml', 'r') as file:
+        rarities = yaml.safe_load(file)['rarities']
+
+    with open('ymls/collectibles.yml', 'r') as emojis_file:
+        ball_to_emoji = yaml.safe_load(emojis_file).get("ball_to_emoji", {})
+
+    sorted_rarities = sorted(rarities.items(), key=lambda item: item[1])
+
+    items_per_page = 5
+    pages = [sorted_rarities[i:i + items_per_page] for i in range(0, len(sorted_rarities), items_per_page)]
+    current_page = 0
+
+    def create_embed(page_index):
+        embed = discord.Embed(
+            title=f"{collectibles_name}'s rarities:",
+            color=discord.Color.blurple(),
+        )
+        embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.avatar.url)
+
+        for name, rarity_value in pages[page_index]:
+            emoji = ball_to_emoji.get(name, '')
+            embed.add_field(name=name.capitalize(), value=f"{emoji} Rarity: {rarity_value}", inline=False)
+        return embed
+
+    view = discord.ui.View()
+
+    async def previous_page(interaction):
+        nonlocal current_page
+        if current_page > 0:
+            current_page -= 1
+            await interaction.response.edit_message(embed=create_embed(current_page), view=view)
+
+    async def next_page(interaction):
+        nonlocal current_page
+        if current_page < len(pages) - 1:
+            current_page += 1
+            await interaction.response.edit_message(embed=create_embed(current_page), view=view)
+
+    previous_button = discord.ui.Button(label="Back", style=discord.ButtonStyle.primary, disabled=True)
+    next_button = discord.ui.Button(label="Next", style=discord.ButtonStyle.primary)
+
+    if len(pages) <= 1:
+        next_button.disabled = True
+
+    previous_button.callback = previous_page
+    next_button.callback = next_page
+
+    view.add_item(previous_button)
+    view.add_item(next_button)
+
+    await interaction.response.send_message(embed=create_embed(current_page), view=view)
+
 @tree.command(name=f'{slash_command_name}_config', description='Configure a spawn channel for the server.')
 @commands.has_permissions(manage_channels=True)
 async def config(interaction: discord.Interaction, channel: discord.TextChannel):
