@@ -86,7 +86,7 @@ You can see we commented `ball 2`, this is for the same reason as mentioned abov
 > #   ball 2: rarity again # for example, 2!
 > ```
 ## config.yml
-The configuration file. Editing this file is **required** to edit **no matter what**.
+The configuration file. Editing this file is **required**.
 
 Here's the file: *(For previewing.)*
 ```yml
@@ -97,7 +97,7 @@ text-prefix: "b." # The prefix for text commands. They can be found at the READM
 
 # Stuff that will be shown on /about.
 about:
-  description: "Collect balls on Discord. Made for people without docker / pc" # Main description. I recommend editing the /about command directly.
+  description: "Collect balls on Discord. Made for people without Docker or PC." # Edits the first line of /about.
   github-link: "https://github.com/wascertified/dockerless-dex" # Only change this if you have a fork, this is not required and can be skipped.
   discord-invite: "https://discord.gg/RSdcTAn7FG" # Change to your discord server.
 
@@ -105,9 +105,22 @@ about:
 collectibles-name: "ball" # Don't add an "s" as the bot will already add the extra "s".
 bot-name: "Dockerless-Dex" # The name of the dex.
 players-group-cog-name: "balls" # No spaces, must be lowercase.
+
+authorized-users:
+  - USER ID HERE 
+  
+# For having multiple, just make sure it matches this look:
+#  - 1234567890
+#  - 1234567890
+# Without the "#", though. The "#" must be ignored if you want multiple.
+
+### NOTES ON AUTHORIZED USERS:
+# Only give to people you trust.
+# It will also give the user the permission of using the kill command (which turns off the bot)
+# With great power comes great responsability.
 ```
 > [!NOTE]
-> The `bot-token` is required. You can find the the proccess of getting your token [here](https://youtu.be/watch?v=aI4OmIbkJH8).
+> The `bot-token` is required. You can find the the proccess of getting your token [here](https://invidious.drgns.space/watch?v=aI4OmIbkJH8).
 
 ### What Does This Do?
 This section is for seeing what X thing does.
@@ -116,9 +129,13 @@ This section is for seeing what X thing does.
    - Tells `dex.py` the discord bot token so it can run it.
 2. text-prefix
    - The prefix for text-based commands. Some of them include `giveball`, `spawnball`, and `reloadtree`.
-     - `giveball {user} {valid_collectable}` | {user} must be a user mention or user ID.
-     - `spawnball {valid_collectable}` | The collectable is optional.
-     - `reloadtree` | Reloads trees. *(slash commands)*
+     - `giveball {user id or mention} {valid collectable}` | Gives a ball to mentioned user.
+     - `spawnball {valid collectable}`                     | The collectable is optional.
+     - `reloadtree`                                        | Reloads trees. *(slash commands)*
+     - `serverblacklist {server id} {reason}`              | Blacklists a server.
+     - `serverblacklistremove {server id} {reason}`        | Removes the blacklist from a server.
+     - `blacklist {user} {reason}`                         | Blacklists mentioned user.
+     - `blacklist {user} {reason}`                         | Removes the blacklist from a user.
 #### About Section
 1. description
    - The text that will be shown at the start of `/about`.
@@ -133,3 +150,13 @@ This section is for seeing what X thing does.
    - Changes the messages in the bot to refer to your bot. E.G: Dockerless-Dex will start spawning balls in this channel. *(Not an actual message inside the bot, but you get the point.)*
 3. players-group-cog-name
    - Changes the begginning of the commands for your bot. E.G: /balls_list *(Please note that it can only be lowercase and can't contain spaces.)*
+#### Owners Section
+1. authorized-users
+   - Users allowed to use the text commands.
+     - `giveball {user id or mention} {valid collectable}` | Gives a ball to mentioned user.
+     - `spawnball {valid collectable}`                     | The collectable is optional.
+     - `reloadtree`                                        | Reloads trees. *(slash commands)*
+     - `serverblacklist {server id} {reason}`              | Blacklists a server.
+     - `serverblacklistremove {server id} {reason}`        | Removes the blacklist from a server.
+     - `blacklist {user} {reason}`                         | Blacklists mentioned user.
+     - `blacklist {user} {reason}`                         | Removes the blacklist from a user.
