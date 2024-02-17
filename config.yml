@@ -14,7 +14,7 @@ collectibles-name: "ball" # Don't add an "s" as the bot will already add the ext
 bot-name: "Dockerless-Dex" # The name of the dex.
 players-group-cog-name: "balls" # No spaces, must be lowercase.
 
-authorized_users:
+authorized-users:
   - USER ID HERE 
   
 # For having multiple, just make sure it matches this look:
