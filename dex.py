@@ -169,7 +169,7 @@ async def about(interaction: discord.Interaction):
         description=f"""
 {balls_to_show}
 {about_description}
-Currently running version [1.7](https://github.com/wascertified/dockerless-dex/releases/tag/1.7)
+Currently running version [1.8](https://github.com/wascertified/dockerless-dex/releases/tag/1.8)
 
 {total_balls} {collectibles_name}s to collect
 {player_count} players that caught {total_caught_balls} {collectibles_name}s
