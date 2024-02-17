@@ -1,2 +1,3 @@
 rarities:
   ball 1: rarity # for example, 1!
+  ball 2: rarity again # for example, 2!
