@@ -13,3 +13,16 @@ about:
 collectibles-name: "ball" # Don't add an "s" as the bot will already add the extra "s".
 bot-name: "Dockerless-Dex" # The name of the dex.
 players-group-cog-name: "balls" # No spaces, must be lowercase.
+
+authorized_users:
+  - USER ID HERE 
+  
+# For having multiple, just make sure it matches this look:
+#  - 1234567890
+#  - 1234567890
+# Without the "#", though. The "#" must be ignored if you want multiple.
+
+### NOTES ON AUTHORIZED USERS:
+# Only give to people you trust.
+# It will also give the user the permission of using the kill command (which turns off the bot)
+# With great power comes great responsability.
