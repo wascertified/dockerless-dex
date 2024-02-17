@@ -27,7 +27,7 @@ bot_name = settings["bot-name"]
 about_description = settings["about"]["description"]
 github_link = settings["about"]["github-link"]
 discord_invite = settings["about"]["discord-invite"]
-authorized_users = settings["authorized_users"]
+authorized_users = settings["authorized-users"]
 
 bot = commands.Bot(command_prefix=prefix, intents=discord.Intents.all())
 bot.remove_command("help")
