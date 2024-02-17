@@ -263,7 +263,7 @@ async def completion(interaction: discord.Interaction, member: discord.Member = 
 
     await interaction.response.send_message(embed=embed)
 
-@tree.command(name=f"{slash_command_name}_rarity", description=f"Get the rarity of {collectibles_name}!")
+@tree.command(name=f"{slash_command_name}_rarity", description=f"Show the rarity of all the {collectibles_name}'s!")
 @commands.check(check_authorized)
 async def rarity(interaction: discord.Interaction): 
     with open('ymls/rarities.yml', 'r') as file:
