@@ -605,6 +605,42 @@ async def spawnball(ctx, *, ball_name: str = None):
         }
     except discord.HTTPException as e:
         await ctx.send(f"Failed to send message: {e}")
+        
+@bot.command(aliases=["stat"])
+@commands.check(check_authorized)
+async def status(ctx, action: str, *args):
+    if action == "set":
+        activity_type, *activity_details = args
+        if activity_type.lower() == "streaming":
+            activity = discord.Streaming(name=" ".join(activity_details), url="http://twitch.tv/streamer")
+        elif activity_type.lower() == "watching":
+            activity = discord.Activity(type=discord.ActivityType.watching, name=" ".join(activity_details))
+        elif activity_type.lower() == "playing":
+            activity = discord.Game(name=" ".join(activity_details))
+        else:
+            await ctx.send("Unsupported activity type. Avaible are `streaming`, `watching`, and `playing`.")
+            return
+        await bot.change_presence(activity=activity)
+        await ctx.send(f"Status set to {activity_type} {' '.join(activity_details)}")
+    elif action == "remove":
+        await bot.change_presence(activity=None, status=discord.Status.online)  # Reset to online when removing activity
+        await ctx.send("Status removed.")
+    elif action == "simple":
+        status_type = args[0].lower()
+        if status_type == "dnd":
+            await bot.change_presence(status=discord.Status.dnd)
+        elif status_type == "online":
+            await bot.change_presence(status=discord.Status.online)
+        elif status_type == "invisible":
+            await bot.change_presence(status=discord.Status.invisible)
+        elif status_type == "idle":
+            await bot.change_presence(status=discord.Status.idle)
+        else:
+            await ctx.send("Invalid status type. Avaible are `dnd`, `online`, `invisible`, and `idle`.")
+            return
+        await ctx.send(f"Status set to {status_type.capitalize()}.")
+    else:
+        await ctx.send("Invalid action. Avaible are `set`, `remove`, and `simple`. Simply use any of the mentioned without other arguments to see avaible options.")
 
 if not token:
     print("No token was found in config.yml! Please check your settings.")
