@@ -10,7 +10,7 @@ catch_names:
   ball 1:
     - catch name 1
     - catch name 2
-  turtle:
+  ball 2:
     - catch name 1
     - catch name 2
 
