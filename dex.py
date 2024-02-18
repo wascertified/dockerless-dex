@@ -29,6 +29,11 @@ about_description = settings["about"]["description"]
 github_link = settings["about"]["github-link"]
 discord_invite = settings["about"]["discord-invite"]
 authorized_users = settings["authorized-users"]
+startup_status = settings.get('startup_status', {})
+activity_type = startup_status.get('activity_type', 'playing')
+activity_name = startup_status.get('activity_name', '')
+status = startup_status.get('status', 'online')
+stream_url = startup_status.get('stream_url', '')
 
 bot = commands.Bot(command_prefix=prefix, intents=discord.Intents.all())
 bot.remove_command("help")
@@ -73,6 +78,18 @@ cursor.execute("""
     )
 """)
 
+discord_status = getattr(discord.Status, status, discord.Status.online)
+if activity_type == 'playing':
+    activity = discord.Game(name=activity_name)
+elif activity_type == 'streaming':
+    activity = discord.Streaming(name=activity_name, url=stream_url)
+elif activity_type == 'listening':
+    activity = discord.Activity(type=discord.ActivityType.listening, name=activity_name)
+elif activity_type == 'watching':
+    activity = discord.Activity(type=discord.ActivityType.watching, name=activity_name)
+else:
+    activity = None
+
 db_path = "blacklist.db"
 if not os.path.exists(db_path):
     open(db_path, 'a').close()
@@ -107,6 +124,7 @@ async def on_ready():
     print(f"{time.ctime()} | Prefix: {prefix}")
     print(f"{time.ctime()} | Servers: {len(bot.guilds)}")
     print(f"{time.ctime()} | Commands loaded: {len(bot.commands)}")
+    await bot.change_presence(status=discord_status, activity=activity)
     await tree.sync()
 
 @bot.command()
