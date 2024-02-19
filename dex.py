@@ -430,7 +430,7 @@ async def ping(interaction: discord.Interaction):
 
 @bot.command()
 @commands.check(check_authorized)
-async def shutdown(ctx):
+async def kill(ctx):
     await ctx.send("Shutting down...")
     await bot.close()
 
