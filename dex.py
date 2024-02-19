@@ -253,7 +253,7 @@ async def completion(interaction: discord.Interaction, member: discord.Member = 
     all_balls_data = countryballs.items()
 
     if not all_balls_data:
-        await interaction.response.send_message(f"No {collectibles_name} added yet.")
+        await interaction.response.send_message(f"No {collectibles_name}s added yet.")
         return
         
     with open('ymls/collectibles.yml', 'r') as emojis_file:
@@ -281,7 +281,7 @@ async def completion(interaction: discord.Interaction, member: discord.Member = 
 
     await interaction.response.send_message(embed=embed)
 
-@tree.command(name=f"{slash_command_name}_rarity", description=f"Show the rarity of all the {collectibles_name}'s!")
+@tree.command(name=f"{slash_command_name}_rarity", description=f"Show the rarity of all the {collectibles_name}s!")
 async def rarity(interaction: discord.Interaction): 
     with open('ymls/rarities.yml', 'r') as file:
         rarities = yaml.safe_load(file)['rarities']
@@ -297,7 +297,7 @@ async def rarity(interaction: discord.Interaction):
 
     def create_embed(page_index):
         embed = discord.Embed(
-            title=f"{collectibles_name}'s rarities:",
+            title=f"{collectibles_name.capitalize}s rarities:",
             color=discord.Color.blurple(),
         )
         embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.avatar.url)
@@ -352,7 +352,7 @@ async def config(interaction: discord.Interaction, channel: discord.TextChannel)
         with open('ymls/configured-channels.yml', 'w') as config_file:
             yaml.dump({interaction.guild_id: channel_id}, config_file, default_flow_style=False)
         embed = discord.Embed(
-            title=f"{bot_name} Activation",
+            title=f"{bot_name.capitalize} Activation",
             description=f"{bot_name} is now configured in {channel.mention}! To remove this spawn channel, use the `/{slash_command_name}_disableconfig` command.\n\n"
                         "[Terms of Service](https://gist.github.com/laggron42/52ae099c55c6ee1320a260b0a3ecac4e)",
             color=0x00FF00
@@ -381,7 +381,7 @@ async def disableconfig(interaction: discord.Interaction):
         with open('ymls/configured-channels.yml', 'w') as config_file:
             yaml.dump(config_dict, config_file, default_flow_style=False)
         
-        await interaction.response.send_message(f"{bot_name} spawn channel configuration has been removed for this server.")
+        await interaction.response.send_message(f"{bot_name.capitalize} spawn channel configuration has been removed for this server.")
     else:
         await interaction.response.send_message("No spawn channel is currently configured for this server.")
 
@@ -428,10 +428,10 @@ async def ping(interaction: discord.Interaction):
 
     await interaction.response.send_message("Pong! {}ms".format(round(bot.latency * 1000)))
 
-@bot.command()
+@bot.command(aliases=["kill"])
 @commands.check(check_authorized)
-async def kill(ctx):
-    await ctx.send("dying!! 😭")
+async def shutdown(ctx):
+    await ctx.send("Shutting down.")
     await bot.close()
 
 @bot.command()
@@ -480,7 +480,7 @@ class CatchModal(discord.ui.Modal):
 
         user_owns_ball = check_if_user_owns_ball(interaction.user.id, self.correct_name)
         shiny_status = "Yes" if random.randint(1, 2048) == 1 else "No"
-        shiny_message = f"\n:star: **It's a shiny {collectibles_name}** :star:" if shiny_status == "Yes" else ""
+        shiny_message = f"\n:star: It's a shiny **{collectibles_name}**! :star:" if shiny_status == "Yes" else ""
 
         if correct_catch_name and input_name in correct_catch_names:
             add_caught_ball(interaction.user.id, self.countryball_url, self.correct_name, time.time(), shiny_status, self.stats['hp'], self.stats['attack'])
@@ -536,7 +536,7 @@ async def spawn_countryball(channel):
     random_countryball_url = countryballs[random_countryball_name]
 
     embed = discord.Embed(
-        title=f"A wild {random_countryball_name} appeared!"
+        title=f"A wild {collectibles_name} appeared!"
     )
     embed.set_image(url=random_countryball_url)
 
@@ -571,7 +571,7 @@ async def spawnball(ctx, *, ball_name: str = None):
         random_countryball_name = ball_name
         random_countryball_url = countryballs.get(ball_name)
         if not random_countryball_url:
-            await ctx.send(f"No {collectibles_name} found with name: {ball_name}")
+            await ctx.send(f"No {collectibles_name} found with name: {ball_name}!")
             return
     else:
         countryball_choice = random.choice(list(countryballs.items()))
@@ -650,19 +650,19 @@ elif not isinstance(token, str) or len(token) == 0:
     exit()
 
 if not prefix:
-    print("No prefix was found in settings.yml! Please check your settings.")
+    print("No prefix was found in config.yml! Please check your settings.")
     exit()
 
 if not collectibles_name:
-    print("No collectibles name was found in settings.yml! Please check your settings.")
+    print("No collectibles name was found in config.yml! Please check your settings.")
     exit()
 
 if not slash_command_name:
-    print("No players group cog name was found in settings.yml! Please check your settings.")
+    print("No players group cog name was found in config.yml! Please check your settings.")
     exit()
 
 if not bot_name:
-    print("No bot name was found in settings.yml! Please check your settings.")
+    print("No bot name was found in config.yml! Please check your settings.")
     exit()
   
 bot.run(token)
