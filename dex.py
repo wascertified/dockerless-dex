@@ -297,7 +297,7 @@ async def rarity(interaction: discord.Interaction):
 
     def create_embed(page_index):
         embed = discord.Embed(
-            title=f"{collectibles_name.capitalize}s rarities:",
+            title=f"{collectibles_name}s rarities:",
             color=discord.Color.blurple(),
         )
         embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.avatar.url)
@@ -352,7 +352,7 @@ async def config(interaction: discord.Interaction, channel: discord.TextChannel)
         with open('ymls/configured-channels.yml', 'w') as config_file:
             yaml.dump({interaction.guild_id: channel_id}, config_file, default_flow_style=False)
         embed = discord.Embed(
-            title=f"{bot_name.capitalize} Activation",
+            title=f"{bot_name.capitalize()} Activation",
             description=f"{bot_name} is now configured in {channel.mention}! To remove this spawn channel, use the `/{slash_command_name}_disableconfig` command.\n\n"
                         "[Terms of Service](https://gist.github.com/laggron42/52ae099c55c6ee1320a260b0a3ecac4e)",
             color=0x00FF00
@@ -381,7 +381,7 @@ async def disableconfig(interaction: discord.Interaction):
         with open('ymls/configured-channels.yml', 'w') as config_file:
             yaml.dump(config_dict, config_file, default_flow_style=False)
         
-        await interaction.response.send_message(f"{bot_name.capitalize} spawn channel configuration has been removed for this server.")
+        await interaction.response.send_message(f"{bot_name.capitalize()} spawn channel configuration has been removed for this server.")
     else:
         await interaction.response.send_message("No spawn channel is currently configured for this server.")
 
@@ -428,10 +428,10 @@ async def ping(interaction: discord.Interaction):
 
     await interaction.response.send_message("Pong! {}ms".format(round(bot.latency * 1000)))
 
-@bot.command(aliases=["kill"])
+@bot.command()
 @commands.check(check_authorized)
 async def shutdown(ctx):
-    await ctx.send("Shutting down.")
+    await ctx.send("Shutting down...")
     await bot.close()
 
 @bot.command()
