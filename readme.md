@@ -4,7 +4,7 @@ Dockerless-Dex *(in a simplified way)* is a way to make dex's without a PC or Do
 Below are the installation process for various systems, aswell as some other stuff you may also want to read.
 
 ## Linux Installation
-1. First of all, install the needed packages. *(This heavily depends on your package manager; Here I'm using `pacman` as an example.)*
+1. First of all, install the needed packages. *(This heavily depends on your package manager, here I'm using `pacman` as an example.)*
 ```sh
 sudo pacman -S python python-pip git neovim nano
 ```
