@@ -4,36 +4,44 @@ Dockerless-Dex *(in a simplified way)* is a way to make dex's without a PC or Do
 Below are the installation process for various systems, aswell as some other stuff you may also want to read.
 
 ## Linux Installation
-1. First of all, install the needed packages. *(This heavily depends on your package manager, in this case I'm using `pacman` since I use Arch.)*
+1. First of all, install the needed packages. *(This heavily depends on your package manager; Here I'm using `pacman` as an example.)*
 ```sh
 sudo pacman -S python python-pip git neovim nano
 ```
-*(`git`, `nano`, and `neovim` are __optional__ as `git` will be used for cloning the repository. `nano` and `neovim` are used for editing text through the terminal; you will probably have those three already installed, depending on your distribution or previous actions.)*
+>[!NOTE]
+>`git`, `nano`, and `neovim` are __optional__ as `git` will be used for cloning the repository. `nano` and `neovim` are used for editing text through the terminal; you will probably have those three already installed, depending on your distribution or previous actions.
 
 2. After installing the packages, clone the repository with `git` or download it manually from [here](https://github.com/wascertified/dockerless-dex/releases).
 ```sh
-cd "$HOME";git clone https://github.com/wascertified/dockerless-dex;cd "$HOME/dockerless-dex"
+cd "$HOME" ; git clone https://github.com/wascertified/dockerless-dex ; cd "$HOME/dockerless-dex"
 # The command above will send you to your home directory then clone the GitHub repository then send you inside the folder. The ";" will run the command once the previous one finishes.
 ```
-3. Once you clone the GitHub repository, edit the `setting.yml` with your preferred editor:
+3. Once you clone the GitHub repository, you can edit the `config.yml` file with your prefered text editor:
 ```sh
-nvim config.yml # Press "i" to go into instert mode, to exit press ESC then write ":wq". (write, quit)
+nvim config.yml # Press "i" to go into instert mode, to exit press ESC to exit insert mode; write ":wq" to exit. (write, quit)
 
 # Or:
+nano config.yml # To exit, press CTRL + X.
 
-nano config.yml # To exit, press CTRL + X
-
-# Once you're inside the file, edit it. It is required for the bot to work.
+# Once you're inside the file, edit it as it is required for your bot to turn on.
 ```
 
 4. Now you can make a VENV *(Virtual ENViroment)* with python to install the dependencies.
 ```sh
 python -m venv .venv # Creates the .venv folder.
 
-source ".venv/bin/activate" # Activates the .venv folder. This will only work if you're using BASH. to know which one you're using, run "which $SHELL".
+source ".venv/bin/activate" # Activates the .venv folder. This will only work if you're using BASH. To know which one you're using, run "which $SHELL" in your terminal.
 
 pip install discord.py pyyaml requests # Installs dependencies.
 ```
+>[!TIP]
+>Your package manager may contain the dependencies. E.G.:
+>```sh
+>yay -S python-yaml python-discord-py python-requests
+>```
+
+>[!NOTE]
+>Creating the VENV isn't required but I still \*personally\* recommend **you** to make it.
 
 5. Now that you got everything ready, make sure that:
    - You have everything under Bot -> Priviliged Gateway Intents ![](https://cdn.discordapp.com/attachments/1204312915432439840/1206397619564314624/image.png?ex=65dbdc56&is=65c96756&hm=e4ddfb943bde269418170012b27f139380becd18c4e32b929e7d1a023aac16d2&)
@@ -65,7 +73,6 @@ python dex.py # Believing you're still in the dockerless-dex/ folder.
    - `python dex.py`
 
 ### Other Stuff
-
 Found an issue? Got a question? Something just didn't work?
 
 **[Join the support discord server](https://discord.gg/RSdcTAn7FG)**!
