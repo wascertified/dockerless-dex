@@ -1,8 +1,40 @@
-# Dockerless-Dex
-Dockerless-Dex *(in a simplified way)* is a way to make dex's without a PC or Docker.
 
-Below are the installation process for various systems, aswell as some other stuff you may also want to read.
+<p align="center"><img src="https://cdn.discordapp.com/icons/1201886084603322448/686b104a254e982bd579ec98f5c7db3d.png?size=1024" width="300px"></p>
+<h1 align="center">Dockerless-Dex</h1> <p
+align="center">Dockerless-Dex (in a simplified way) is a way to make dex without a PC or Docker.</p><br><br>
 
+<img src="https://cdn.discordapp.com/icons/1201886084603322448/686b104a254e982bd579ec98f5c7db3d.png?size=1024" width="40%" align="right">
+
+Dockerless-dex, or simply "Dockerless", is a way to make a BallsDex clone without all the Docker toomfolery that Docker brings. 
+Some of those include: 
+
+1. Docker clearing entire dexes
+2. Docker not working in some systems
+3. No mobile support
+
+And Dockerless simply just fixes those! Obviosuly, Dockerless-Dex is still in early development and there are still some issues, such as missing cards, abilities, fight, and other.
+
+Dockerless currently has these features (for those that feel like it falls short to BallsDex)
+
+1. What-Does-What README markdown file.
+2. About 2 to 1 new releases in a day. (sometimes)
+3. Mobile support
+4. Easy-to-understand method to add balls (and a admin panel, soon)
+5. Command to blacklist servers or users.
+6. Better admin settings.
+7. Settings for status.
+
+This all started due to Wawa hating Docker (and I begging him to give me his old code), which made Wawa open this repository. We were (also) originally working on [BigRat](https://github.com/soswav/bigrat) which I have cancelled until I fully learn Python or something actually useful.
+
+Below are some of the installations for two systems; [Linux](#linux-installation) and [Windows](#windows-installation). MacOS is not listed yet; if you can, install [Homebrew](https://brew.sh) and install the following:
+1. git (optional, install manually [here](https://github.com/wascertified/dockerless-dex/releases) if you don't want to use git)
+2. nano (optional as well, used for editing text)
+3. neovim (optional, used for editing text)
+4. python (required, the bot is written in python
+5. python-pip (pip for installing the libraries needed by the bot)
+6. pyyaml, discord.py, requests (install these with pip (`pip install pyyaml discord.py requests`)
+
+You can install the brew packages with `brew install`.
 ## Linux Installation
 1. First of all, install the needed packages. *(This heavily depends on your package manager, here I'm using `pacman` as an example.)*
 ```sh
