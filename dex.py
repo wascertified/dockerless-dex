@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands, tasks
 from discord import app_commands
-import random, asyncio, yaml, os, time
+import random, asyncio, yaml, os, time, sys
 from typing import Literal, Optional
 import sqlite3
 
@@ -433,6 +433,15 @@ async def ping(interaction: discord.Interaction):
 async def kill(ctx):
     await ctx.send("Shutting down...")
     await bot.close()
+
+@bot.command()
+@commands.is_owner()
+async def reloadcache(ctx):
+  await ctx.send("Reloading cache...")
+  await ctx.message.add_reaction("✅")
+  await 
+  os.system("clear")
+  os.execv(sys.executable, ['python'] + sys.argv)
 
 @bot.command()
 @commands.check(check_authorized)
