@@ -385,6 +385,46 @@ async def disableconfig(interaction: discord.Interaction):
     else:
         await interaction.response.send_message("No spawn channel is currently configured for this server.")
 
+@tree.command(name=f'{slash_command_name}_last', description=f'Display info of your last {collectibles_name}.')
+async def last(interaction: discord.Interaction):
+    user_id = interaction.user.id
+    guild_id = interaction.guild.id if interaction.guild else None
+    if is_blacklisted(user_id, 'user') or (guild_id and is_blacklisted(guild_id, 'server')):
+        await interaction.response.send_message(
+            "You or this server are blacklisted from using this bot.",
+            ephemeral=True
+        )
+        return
+
+    with sqlite3.connect('caught_balls.db') as conn:
+        cursor = conn.cursor()
+        query = """
+            SELECT url, name, timestamp, shiny_status, hp, attack
+            FROM caught_balls
+            WHERE user_id = ?
+            ORDER BY timestamp DESC
+            LIMIT 1
+        """
+        cursor.execute(query, (user_id,))
+        result = cursor.fetchone()
+
+    if result is None:
+        await interaction.response.send_message(
+            f"You haven't caught any {collectibles_name}s yet!",
+            ephemeral=True
+        )
+        return
+
+    url, name, timestamp, shiny_status, hp, attack = result
+    embed = discord.Embed(
+        title=f"{collectibles_name.capitalize()} Info",
+        description=f"**{collectibles_name.capitalize()}:** {name.capitalize()}\n**Caught at:** <t:{int(timestamp)}:F>\n**HP:** {hp or 'Unknown'}\n**Attack:** {attack or 'Unknown'}",
+        color=discord.Color.blurple() if shiny_status else discord.Color.red()
+    )
+    embed.set_thumbnail(url=thumbnail_url)
+    embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
+    await interaction.response.send_message(embed=embed)
+
 @bot.command()
 @commands.guild_only()
 @commands.check(check_authorized)
@@ -439,7 +479,6 @@ async def kill(ctx):
 async def reloadcache(ctx):
   await ctx.send("Reloading cache...")
   await ctx.message.add_reaction("✅")
-  await 
   os.system("clear")
   os.execv(sys.executable, ['python'] + sys.argv)
 
