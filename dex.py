@@ -213,26 +213,48 @@ async def list(interaction: discord.Interaction, user: discord.Member = None):
     if user is None:
         user = interaction.user
     caught_balls = get_caught_balls_for_user(user.id)
-    embed = discord.Embed(
-        title=f"{user.display_name}'s {collectibles_name}",
-        color=discord.Color.blue() if caught_balls else discord.Color.red()
-    )
-    if caught_balls:
-        embed.description = "Here is what they own:"
-        for url, name, timestamp, shiny_status, _, _ in caught_balls:
-            try:
-                if shiny_status:
-                    emoji_id = ":star:"
-                else:
-                    emoji_id = ball_to_emoji.get(name)
+    items_per_page = 7
+    pages = [caught_balls[i:i + items_per_page] for i in range(0, len(caught_balls), items_per_page)]
+    current_page = 0
+
+    def create_embed(page_index):
+        embed = discord.Embed(
+            color=discord.Color.blue() if pages[page_index] else discord.Color.red()
+        )
+        embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.avatar.url)
+        if pages[page_index]:
+            for url, name, timestamp, _, _, _ in pages[page_index]:
+                emoji_id = ball_to_emoji.get(name)
                 name_with_emoji = f"{emoji_id} | {name.capitalize()}" if emoji_id else name.capitalize()
                 embed.add_field(name=name_with_emoji, value=f"Caught at: <t:{int(timestamp)}:F>", inline=False)
-            except ValueError as ve:
-                print(f"Invalid ball information format: {ve}")
-                continue
-    else:
-        embed.description = f"They haven't caught any {collectibles_name}s yet!"
-    await interaction.response.send_message(embed=embed)
+        else:
+            embed.description = f"They haven't caught any {collectibles_name}s yet!"
+        return embed
+
+    view = discord.ui.View()
+
+    async def previous_page(interaction):
+        nonlocal current_page
+        if current_page > 0:
+            current_page -= 1
+            await interaction.response.edit_message(embed=create_embed(current_page), view=view)
+
+    async def next_page(interaction):
+        nonlocal current_page
+        if current_page < len(pages) - 1:
+            current_page += 1
+            await interaction.response.edit_message(embed=create_embed(current_page), view=view)
+
+    previous_button = discord.ui.Button(label="Back", style=discord.ButtonStyle.primary, disabled=current_page == 0)
+    next_button = discord.ui.Button(label="Next", style=discord.ButtonStyle.primary, disabled=current_page == len(pages) - 1)
+
+    previous_button.callback = previous_page
+    next_button.callback = next_page
+
+    view.add_item(previous_button)
+    view.add_item(next_button)
+
+    await interaction.response.send_message(embed=create_embed(current_page), view=view)
 
 @tree.command(name=f"{slash_command_name}_completion", description=f"Show your current completion of {bot_name}.")
 async def completion(interaction: discord.Interaction, member: discord.Member = None):
@@ -421,7 +443,6 @@ async def last(interaction: discord.Interaction):
         description=f"**{collectibles_name.capitalize()}:** {name.capitalize()}\n**Caught at:** <t:{int(timestamp)}:F>\n**HP:** {hp or 'Unknown'}\n**Attack:** {attack or 'Unknown'}",
         color=discord.Color.blurple() if shiny_status else discord.Color.red()
     )
-    embed.set_thumbnail(url=thumbnail_url)
     embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
     await interaction.response.send_message(embed=embed)
 
