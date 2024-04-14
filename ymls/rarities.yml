@@ -1,3 +1,5 @@
 rarities:
-  ball 1: rarity # for example, 1!
-  ball 2: rarity again # for example, 2!
+  ball 1: 1
+#  big rat: 1
+
+# NOTE: That is an example.
