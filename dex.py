@@ -28,7 +28,6 @@ bot_name = settings["bot-name"]
 about_description = settings["about"]["description"]
 github_link = settings["about"]["github-link"]
 discord_invite = settings["about"]["discord-invite"]
-authorized_users = settings["authorized-users"]
 startup_status = settings.get('startup_status', {})
 activity_type = startup_status.get('activity_type', 'playing')
 activity_name = startup_status.get('activity_name', '')
@@ -55,9 +54,6 @@ cursor.execute("""
         attack INTEGER
     )
 """)
-
-def check_authorized(ctx):
-  return ctx.author.id in authorized_users
 
 def add_caught_ball(user_id, url, name, timestamp, shiny_status, hp, attack):
     cursor.execute("INSERT INTO caught_balls (user_id, url, name, timestamp, shiny_status, hp, attack) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -128,7 +124,7 @@ async def on_ready():
     await tree.sync()
 
 @bot.command()
-@commands.check(check_authorized)
+@commands.is_owner()
 async def blacklist(ctx, user: discord.User, *, reason: str):
     if not is_blacklisted(user.id, 'user'):
         add_to_blacklist(user.id, 'user', reason)
@@ -137,7 +133,7 @@ async def blacklist(ctx, user: discord.User, *, reason: str):
         await ctx.send(f"{user.mention} is already blacklisted.")
 
 @bot.command()
-@commands.check(check_authorized)
+@commands.is_owner()
 async def serverblacklist(ctx, server: discord.Guild, *, reason: str):
     if not is_blacklisted(server.id, 'server'):
         add_to_blacklist(server.id, 'server', reason)
@@ -146,7 +142,7 @@ async def serverblacklist(ctx, server: discord.Guild, *, reason: str):
         await ctx.send(f"{server.name} is already blacklisted.")
 
 @bot.command()
-@commands.check(check_authorized)
+@commands.is_owner()
 async def blacklistremove(ctx, user: discord.User):
     if is_blacklisted(user.id, 'user'):
         remove_from_blacklist(user.id, 'user')
@@ -155,7 +151,7 @@ async def blacklistremove(ctx, user: discord.User):
         await ctx.send(f"{user.mention} is not blacklisted.")
 
 @bot.command()
-@commands.check(check_authorized)
+@commands.is_owner()
 async def serverblacklistremove(ctx, server: discord.Guild):
     if is_blacklisted(server.id, 'server'):
         remove_from_blacklist(server.id, 'server')
@@ -440,7 +436,7 @@ async def last(interaction: discord.Interaction):
 
 @bot.command()
 @commands.guild_only()
-@commands.check(check_authorized)
+@commands.is_owner()
 async def reloadtree(ctx: commands.Context, guilds: commands.Greedy[discord.Object], spec: Optional[Literal["~", "*", "^"]] = None) -> None:
     if not guilds:
         if spec == "~":
@@ -482,7 +478,7 @@ async def ping(interaction: discord.Interaction):
     await interaction.response.send_message("Pong! {}ms".format(round(bot.latency * 1000)))
 
 @bot.command()
-@commands.check(check_authorized)
+@commands.is_owner()
 async def kill(ctx):
     await ctx.send("Shutting down...")
     await bot.close()
@@ -496,7 +492,7 @@ async def reloadcache(ctx):
   os.execv(sys.executable, ['python'] + sys.argv)
 
 @bot.command()
-@commands.check(check_authorized)
+@commands.is_owner()
 async def giveball(ctx, user: discord.User, url: str):
     ballname = url.split('/')[-1].split('.')[0]
     if ballname not in countryballs:
@@ -625,7 +621,7 @@ async def spawn_countryball(channel):
         print(f"Invalid argument: {e}")
 
 @bot.command()
-@commands.check(check_authorized)
+@commands.is_owner()
 async def spawnball(ctx, *, ball_name: str = None):
     channel = ctx.channel
     if ball_name:
@@ -668,7 +664,7 @@ async def spawnball(ctx, *, ball_name: str = None):
         await ctx.send(f"Failed to send message: {e}")
         
 @bot.command(aliases=["stat"])
-@commands.check(check_authorized)
+@commands.is_owner()
 async def status(ctx, action: str, *args):
     if action == "set":
         activity_type, *activity_details = args
