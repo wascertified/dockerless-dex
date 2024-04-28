@@ -14,20 +14,6 @@ collectibles-name: "ball"       # Don't add an "s" as the bot will already add t
 bot-name: "Dockerless-Dex"      # The name of the dex.
 players-group-cog-name: "balls" # No spaces, must be lowercase.
 
-# For having multiple, just make sure it matches this look:
-#
-#authorized-users:
-#  - 1234567890
-#  - 12345678902
-#
-# Remember to get the user ID, not the username. You can get them by enabling 'Developer Mode' through settings and right clicking on a username
-# and clicking on 'Copy User ID'. On your phone, enable 'Developer Mode' and go to a user profile: Once you're in a user profile just click on
-# the three dots in there. Click on 'Copy User ID' and you should be AOK.
-### NOTES ON AUTHORIZED USERS: ###
-# Only give to people you trust.
-# It will also give the user the permission of using the kill command (which turns off the bot).
-# With great power comes great responsability.
-
 # Bot startup status configuration.
 startup_status:
   activity_type: "watching"                # Options: playing, streaming, listening, watching
