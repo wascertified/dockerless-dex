@@ -99,13 +99,6 @@ about:
 collectibles-name: "ball"       # Don't add an "s" as the code will already add the extra "s".
 bot-name: "Dockerless-Dex"      # The name of the dex.
 players-group-cog-name: "balls" # No spaces, must be lowercase.
-
-# Bot startup status configuration.
-startup_status:
-  activity_type: "watching"                # Options: playing, streaming, listening, watching
-  activity_name: "Dockerless-Dex"          # Name of the activity.
-  status: "dnd"                            # Options: online, idle, dnd, invisible
-  stream_url: "http://twitch.tv/settings"  # Required if activity_type is streaming. If it is a YouTube link, it must be a Stream-type video.
 ```
 > [!NOTE]
 > The `bot-token` is required. You can find the the proccess of getting your token [here](https://invidious.drgns.space/watch?v=aI4OmIbkJH8).
