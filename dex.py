@@ -28,11 +28,6 @@ bot_name = settings["bot-name"]
 about_description = settings["about"]["description"]
 github_link = settings["about"]["github-link"]
 discord_invite = settings["about"]["discord-invite"]
-startup_status = settings.get('startup_status', {})
-activity_type = startup_status.get('activity_type', 'playing')
-activity_name = startup_status.get('activity_name', '')
-status = startup_status.get('status', 'online')
-stream_url = startup_status.get('stream_url', '')
 
 bot = commands.Bot(command_prefix=prefix, intents=discord.Intents.all())
 bot.remove_command("help")
@@ -74,18 +69,6 @@ cursor.execute("""
     )
 """)
 
-discord_status = getattr(discord.Status, status, discord.Status.online)
-if activity_type == 'playing':
-    activity = discord.Game(name=activity_name)
-elif activity_type == 'streaming':
-    activity = discord.Streaming(name=activity_name, url=stream_url)
-elif activity_type == 'listening':
-    activity = discord.Activity(type=discord.ActivityType.listening, name=activity_name)
-elif activity_type == 'watching':
-    activity = discord.Activity(type=discord.ActivityType.watching, name=activity_name)
-else:
-    activity = None
-
 db_path = "blacklist.db"
 if not os.path.exists(db_path):
     open(db_path, 'a').close()
@@ -120,7 +103,6 @@ async def on_ready():
     print(f"{time.ctime()} | Prefix: {prefix}")
     print(f"{time.ctime()} | Servers: {len(bot.guilds)}")
     print(f"{time.ctime()} | Commands loaded: {len(bot.commands)}")
-    await bot.change_presence(status=discord_status, activity=activity)
     await tree.sync()
 
 @bot.command()
@@ -663,42 +645,6 @@ async def spawnball(ctx, *, ball_name: str = None):
     except discord.HTTPException as e:
         await ctx.send(f"Failed to send message: {e}")
         
-@bot.command(aliases=["stat"])
-@commands.is_owner()
-async def status(ctx, action: str, *args):
-    if action == "set":
-        activity_type, *activity_details = args
-        if activity_type.lower() == "streaming":
-            activity = discord.Streaming(name=" ".join(activity_details), url="http://twitch.tv/streamer")
-        elif activity_type.lower() == "watching":
-            activity = discord.Activity(type=discord.ActivityType.watching, name=" ".join(activity_details))
-        elif activity_type.lower() == "playing":
-            activity = discord.Game(name=" ".join(activity_details))
-        else:
-            await ctx.send("Unsupported activity type. Avaible are `streaming`, `watching`, and `playing`.")
-            return
-        await bot.change_presence(activity=activity)
-        await ctx.send(f"Status set to {activity_type} {' '.join(activity_details)}")
-    elif action == "remove":
-        await bot.change_presence(activity=None, status=discord.Status.online)  # Reset to online when removing activity
-        await ctx.send("Status removed.")
-    elif action == "simple":
-        status_type = args[0].lower()
-        if status_type == "dnd":
-            await bot.change_presence(status=discord.Status.dnd)
-        elif status_type == "online":
-            await bot.change_presence(status=discord.Status.online)
-        elif status_type == "invisible":
-            await bot.change_presence(status=discord.Status.invisible)
-        elif status_type == "idle":
-            await bot.change_presence(status=discord.Status.idle)
-        else:
-            await ctx.send("Invalid status type. Avaible are `dnd`, `online`, `invisible`, and `idle`.")
-            return
-        await ctx.send(f"Status set to {status_type.capitalize()}.")
-    else:
-        await ctx.send("Invalid action. Avaible are `set`, `remove`, and `simple`. Simply use any of the mentioned without other arguments to see avaible options.")
-
 if not token:
     print("No token was found in config.yml! Please check your settings.")
     exit()

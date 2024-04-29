@@ -10,7 +10,7 @@ about:
   discord-invite: "https://discord.gg/RSdcTAn7FG"                                # Change to your discord server.
 
 # Stuff that will be used on commands.
-collectibles-name: "ball"       # Don't add an "s" as the bot will already add the extra "s".
+collectibles-name: "ball"       # Don't add an "s" as the code will already add the extra "s".
 bot-name: "Dockerless-Dex"      # The name of the dex.
 players-group-cog-name: "balls" # No spaces, must be lowercase.
 

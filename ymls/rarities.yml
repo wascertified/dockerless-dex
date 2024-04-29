@@ -1,5 +1,11 @@
 rarities:
   ball 1: 1
-#  big rat: 1
+# big rat: 1
 
-# NOTE: That is an example.
+#### NOTES: ####
+# These texts that begin with '#' are comments, they are ignored by both Python and YAML. They are mostly used to explain something.
+# The comment above, 'big rat: 1' is an example on how to do so. the first entry ('big rat') is the collectible inside collectibles.yml,
+# it must be the exact same as the one below 'countryballs:'. The number ('1') is the rarity. It can not be a floating number (e.g.: '1.5'),
+# so watch out for that.
+# Please also make sure to use the correct syntax.
+# Read the README inside the folder, as we highly recommend you to do so.

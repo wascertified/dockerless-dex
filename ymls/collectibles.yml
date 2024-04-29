@@ -1,23 +1,25 @@
 countryballs:
     ball 1: url
-#    big rat: https://bigrat.monster/media/perfect.png
+#   big rat: https://bigrat.monster/media/perfect.png
 
 ball_to_emoji:
     ball 1: emoji
-#    big rat: <:bigrat:1227419022375649340>
+#   big rat: <:bigrat:1227419022375649340>
 
 catch_names:
   ball 1:
     - catch name 1
     - catch name 2
-#  big rat:
-#    - big rat
-#    - perfect rat
-#    - awesome rat
-#    - rat
-#    - such rat much wow
+# big rat:
+#   - big rat
+#   - perfect rat
+#   - awesome rat
+#   - rat
+#   - such rat much wow
 
 
 #### NOTES: ####
 # These texts that begin with '#' are comments, they are ignored by both Python and YAML. They are mostly used to explain something,
 # And here I'm giving examples; If you don't know how to get your 'FULL' emoji ID, go to the README inside this folder.
+# Please, make sure to use the correct syntax.
+# Read the README inside the folder, as we highly recommend you to do so.
